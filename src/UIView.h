@@ -1,0 +1,89 @@
+#ifndef UIVIEW_H
+#define UIVIEW_H
+
+#include <vector>
+#ifdef _WIN32
+#include <GL/glew.h>
+//#define GLEW_STATIC
+//#include "C:\Users\dokipen\Documents\Visual Studio 2010\libs\glew-1.9.0\include\GL\glew.h"
+#include "C:\Users\dokipen\Documents\Visual Studio 2010\libs\glfw-2.7.7.bin.WIN32\include\GL\glfw.h"
+#else
+#include <GL/glew.h>
+#include "/local1/delliott/glfw-3.0.3/include/GLFW/glfw3.h"
+#endif
+#include "PlugTypes.h"
+
+
+
+
+using namespace std;
+
+class UIWindow;
+class Node;
+struct keyStoreStruct;
+
+
+
+class UIView {
+
+
+    protected:
+
+        UIWindow *rootWindow;
+        int parentViewID;
+        vector<int> UIViewIndexStore;//store indexes to children. only store indexes because I only want ONE place to store the actuall addresses of all the views. best place I can think of is in the window that owns them all. As soon as I start having multiple places where addresses can be stores it can get complex.
+        vector<int>::iterator viewIndexIterator;
+        int viewCount;//how many view are its children. mainly for controlling vpCntlr dividers
+
+
+        GLubyte drawIDColour[3];
+        GLfloat viewColour[4];
+
+
+        bool drawable;
+        bool childrenDrawable;
+
+        bool lmbPressed;
+
+
+    public:
+
+
+
+        UIView(UIWindow *root, int width, int height);//HAVE to pass a root node that keeps track of this globally
+        virtual ~UIView();
+        virtual void Init();
+        virtual void Draw();// make it virtual so that it will call the derived function even if we refer to the object as a UIView
+        void DrawSubViews();
+        virtual void DrawSelectPass();
+        void DrawSelectPassSubViews();
+        virtual void viewClicked(keyStoreStruct key, int senderID);//default just calls parent viewClicked. if parent == NULL then do nothinng.
+        virtual void viewDragged(keyStoreStruct key, int senderID);
+        virtual void viewReleased(keyStoreStruct key, int senderID);
+        //void setRoot(GLGui *root); //done in constructor
+        void movePosition(float moveX, float moveY);
+        void setPosition(float setX, float setY);
+        void setSize(int sizeX, int sizeY);
+        void offsetSize(int sizeX, int sizeY);
+        UIRect getRect();
+        void setDrawable(bool amIdrawable);
+        void setChildrenDrawable(bool areChildrenDrawable);
+        void setColour (GLfloat R, GLfloat G, GLfloat B, GLfloat A);
+        UIView* getParent();
+        UIPoint getWorldPos();
+        void addSubView(UIView* newView);
+        void printID();
+
+        //bool stopWorldPosSearch;//for VPts to know when they don't need to search any more higher.
+        virtual void resolveSize();//to notify children of parent resizing.
+
+        UIRect globalRect;
+        UIRect viewRect;
+        int globalIndexID;
+        int localID;
+        void setParentID(int parentID);
+
+
+};
+
+#endif
