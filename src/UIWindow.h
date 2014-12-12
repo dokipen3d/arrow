@@ -75,6 +75,7 @@ public:
     void GLLoop();
     void InitGL(const char *name);
     void DrawGui();
+    void ForceRefresh();
     void setViewController(UIViewController *controller); // can dynamically change viewController so we can have different behaviour at runtime
 
     void registerView(UIView *newView, UIView *sender); //add view to list and get id assigned and invoke init

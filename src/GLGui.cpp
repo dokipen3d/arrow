@@ -23,6 +23,7 @@ GLGui::GLGui(){
     if (glfwInit() != GL_TRUE)  {
         CloseGUI(1);            }
     windowResized = false;
+
 }
 
 GLGui::~GLGui(){
@@ -66,7 +67,24 @@ void GLGui::framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     GLGui::windowRect.size.width = width;
     GLGui::windowRect.size.height = height;
+    UIWindow *currentWindow = static_cast<UIWindow*>(glfwGetWindowUserPointer(window));
+    currentWindow->setSize(windowRect.size.width, windowRect.size.height);
+
     windowResized = true;
+}
+
+
+//to get around calling non static functions glfw lets us store pointers
+void GLGui::window_refresh_callback(GLFWwindow* window){
+    UIWindow *currentWindow = static_cast<UIWindow*>(glfwGetWindowUserPointer(window));
+    currentWindow->ForceRefresh();
+
+}
+
+void GLGui::refresh(){
+
+    eventWindow->ForceRefresh();
+
 }
 
 void GLGui::resizeWindow(int width, int height)
@@ -81,6 +99,7 @@ void GLGui::addWindow(UIWindow *window){
 
     //here maybe add UIwindow id checking so we can forwad messages to correct window
     GLGui::eventWindow = window;
+    glfwSetWindowUserPointer(window->getWindow(), window);
 
 }
 
@@ -103,8 +122,8 @@ void GLGui::setCallBacks(GLFWwindow *window){
     glfwSetKeyCallback(window, GLGui::keyCallback);
 	glfwSetMouseButtonCallback(window, GLGui::MouseButtonCallback);
 	glfwSetCursorPosCallback(window, GLGui::MousePosCallback);
-	glfwSetWindowSizeCallback(window, GLGui::framebuffer_size_callback);
-
+    glfwSetWindowSizeCallback(window, GLGui::framebuffer_size_callback);
+    glfwSetWindowRefreshCallback(window, GLGui::window_refresh_callback);
 
 }
 

@@ -26,6 +26,7 @@ class UIViewController;
 class Node;
 class UIWindow;
 
+
 class GLGui {
 
 
@@ -34,6 +35,8 @@ private:
 
     UIViewController *viewController;
     UIWindow *eventWindow;
+    UIWindow *userPointerWindow;
+
 
 
 public:
@@ -57,6 +60,9 @@ public:
     static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
     static void MousePosCallback(GLFWwindow* window, double xpos, double ypos);
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+    static void window_refresh_callback(GLFWwindow* window);
+
+    void refresh();
 
     void resizeWindow(int width, int height);
 

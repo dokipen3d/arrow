@@ -59,6 +59,15 @@ void UIWindow::GLLoop(){
     }
 }
 
+void UIWindow::ForceRefresh(){
+
+    DrawGui();
+    glfwSwapBuffers(window);
+    //glfwWaitEvents();
+
+}
+
+
 void UIWindow::resetViewport()
 {
     glViewport(0.0, 0.0, fbRect.size.width,fbRect.size.height);
