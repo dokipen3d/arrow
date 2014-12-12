@@ -51,7 +51,7 @@ atlas::atlas(FT_Face face, int height)
 
 
         w += g->bitmap.width;
-        h = std::max(h, g->bitmap.rows);
+        h = std::max((uint32_t)h, g->bitmap.rows);
 
 
 
@@ -64,7 +64,7 @@ atlas::atlas(FT_Face face, int height)
 
 
     glActiveTexture(GL_TEXTURE0);
-    TextEngine::checkGLError();
+    //TextEngine::checkGLError();
 
     glGenTextures(1, &tex);
 
@@ -194,14 +194,14 @@ void TextEngine::initResources()
      }
 
 
-    if(FT_New_Face(ft, "Helvetica.ttf", 0, &face)) {
+    if(FT_New_Face(ft, "/Users/dokipen/Documents/Projects/arrow/src/Helvetica.ttf", 0, &face)) {
       fprintf(stderr, "Could not open font\n");
       return;
     }
     cout << "fonts loaded" << endl;
     textShader = new ShaderObject();
 
-    textShader->loadProgram("textShader.vert", "textShader.frag");
+    textShader->loadProgram("/Users/dokipen/Documents/Projects/arrow/src/textShader.vert", "/Users/dokipen/Documents/Projects/arrow/src/textShader.frag");
     //checkGLError();
 
     //textShader->printProgramLog(textShader->getProgramID());

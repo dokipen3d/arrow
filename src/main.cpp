@@ -13,7 +13,7 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 //#include <glew.h>
-#include "/local1/delliott/glfw-3.0.3/include/GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 #endif
 
 

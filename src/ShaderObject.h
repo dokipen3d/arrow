@@ -7,7 +7,7 @@
 //#include </local1/delliott/glew-1.10.0/include/GL/glew.h>
 #include <GL/glew.h>
 
-#include "/local1/delliott/glfw-3.0.3/include/GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
 
 #include <cstdio>
@@ -44,6 +44,7 @@ public:
 
     void setTextureUnits();
 
+    GLenum error;
 
     GLuint myProgramID;
     GLuint getProgramID();
@@ -51,6 +52,8 @@ public:
     std::string readFile(const char *filePath);
     void printProgramLog( GLuint program);
 
+    const char *openGLErrorString(GLenum _errorCode);
+    void CheckGLError(std::string str);
 
 
 protected:

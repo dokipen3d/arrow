@@ -21,14 +21,15 @@ UIViewController::UIViewController(){
     mainWindow->registerView(mainWindow, (UIView*)this);
     mainWindow->setViewController(this);
     //mainWindow->setHandler(appGui);
-    //cout << "about to run UIController appgui init" <<std::endl;
+    cout << "about to run UIController appgui init" <<std::endl;
     mainWindow->InitGL("arrowtest");
+    cout << "ran UIController appgui init" <<std::endl;
+
     appGui->addWindow(mainWindow);
 
-    //cout << "Initialised. about to run UIController apploop" <<std::endl;
+    cout << "Initialised. about to run UIController apploop" <<std::endl;
     appLoop();
 
-    //appGui->setViewController(this);
 
 
 }

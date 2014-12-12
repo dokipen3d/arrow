@@ -3,7 +3,7 @@
 #define PLUGTYPES_H_
 
 #include <GL/glew.h>
-#include "/local1/delliott/glfw-3.0.3/include/GLFW/glfw3.h"
+#include "/usr/local/include/GLFW/glfw3.h"
 
 #include <cstdio>
 #include <cstdlib>

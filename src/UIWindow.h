@@ -13,7 +13,7 @@
 
 //#define GLEW_STATIC
 #include <GL/glew.h>
-#include "/local1/delliott/glfw-3.0.3/include/GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 #include "ShaderObject.h"
 
 
@@ -68,6 +68,8 @@ public:
     ~UIWindow();
 
     void ResizeWindow( int width, int height); // GLGui will call this after it handles event.
+
+    float scaleFactor;
 
     virtual void Init();
     void GLLoop();

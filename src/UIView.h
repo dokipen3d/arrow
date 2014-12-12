@@ -9,7 +9,7 @@
 #include "C:\Users\dokipen\Documents\Visual Studio 2010\libs\glfw-2.7.7.bin.WIN32\include\GL\glfw.h"
 #else
 #include <GL/glew.h>
-#include "/local1/delliott/glfw-3.0.3/include/GLFW/glfw3.h"
+#include "/usr/local/include/GLFW/glfw3.h"
 #endif
 #include "PlugTypes.h"
 
@@ -79,6 +79,7 @@ class UIView {
 
         UIRect globalRect;
         UIRect viewRect;
+        UIRect fbRect;
         int globalIndexID;
         int localID;
         void setParentID(int parentID);

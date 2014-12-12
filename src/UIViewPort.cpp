@@ -1,4 +1,5 @@
 #include "UIViewPort.h"
+#include "UIWindow.h"
 #include <iostream>
 
 
@@ -49,7 +50,7 @@ void UIViewPort::offsetWidthHeight(float Width, float Height)
 void UIViewPort::Draw()
 {
 
-    glViewport(globalRect.point.x, globalRect.point.y,viewRect.size.width,viewRect.size.height);
+    glViewport(globalRect.point.x*rootWindow->scaleFactor, globalRect.point.y*rootWindow->scaleFactor,viewRect.size.width*rootWindow->scaleFactor,viewRect.size.height*rootWindow->scaleFactor);
     //cout << "set viewportx to " << globalRect.point.x << "with size " << viewRect.size.width << endl;
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -62,10 +63,11 @@ void UIViewPort::Draw()
     UIView::Draw();
 }
 
+//dont scale drawing of select pass as
 void UIViewPort::DrawSelectPass()
 {
     cout << "in VP DrawSelectPass" << endl;
-    glViewport(globalRect.point.x, globalRect.point.y,viewRect.size.width,viewRect.size.height);
+    glViewport(globalRect.point.x, globalRect.point.y,viewRect.size.width*rootWindow->scaleFactor,viewRect.size.height*rootWindow->scaleFactor);
     //cout << "set viewportx to " << globalRect.point.x << "with size " << viewRect.size.width << endl;
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();

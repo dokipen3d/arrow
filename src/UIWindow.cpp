@@ -61,7 +61,7 @@ void UIWindow::GLLoop(){
 
 void UIWindow::resetViewport()
 {
-    glViewport(0.0, 0.0, viewRect.size.width,viewRect.size.height);
+    glViewport(0.0, 0.0, fbRect.size.width,fbRect.size.height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
@@ -127,7 +127,7 @@ void UIWindow::InitGL(const char *name){
     frustrum.centerX = 0;
     frustrum.centerY = 0;
 
-    checkOpenGLError();
+    //checkOpenGLError();
     aspect_ratio = (viewRect.size.width/viewRect.size.height);
 
     cout << "aspect ratio is " << aspect_ratio << std::endl;
@@ -147,7 +147,16 @@ void UIWindow::InitGL(const char *name){
 
     glfwSwapInterval(1);
     window = glfwCreateWindow(viewRect.size.width, viewRect.size.height, "arrow", NULL, NULL);
+    glfwGetFramebufferSize 	(window,
+           &fbRect.size.width,
+           &fbRect.size.height
+        );
 
+    cout << fbRect.size.width << "";
+    cout << fbRect.size.height << "";
+
+    scaleFactor = (fbRect.size.width / viewRect.size.width);
+    cout << " scale factor is " << scaleFactor << endl;
     glfwMakeContextCurrent(window);
 
     if (!window)
@@ -173,7 +182,7 @@ void UIWindow::InitGL(const char *name){
     cout << "setting window name as " << name << std::endl;
     //glfwSetWindowTitle(name);
     viewController->setCallBacks();
-    glViewport(0.0, 0.0, viewRect.size.width,viewRect.size.height);
+    glViewport(0.0, 0.0, fbRect.size.width,fbRect.size.height);
     //checkOpenGLError();
     // set the projection matrix to a normal frustum with a max depth of 50
 
@@ -205,9 +214,11 @@ void UIWindow::InitGL(const char *name){
     //glfwSwapBuffers();
     cout << "GLGui created"<< std::endl;
 
+    cout << "about to create text engine"<< std::endl;
 
-    textEngine = new TextEngine();
-    textEngine->initResources();
+    //textEngine = new TextEngine();
+    {}
+    //textEngine->initResources();
 
 
     //windowShader = new ShaderObject("textShader.vert", "textShader.frag");
