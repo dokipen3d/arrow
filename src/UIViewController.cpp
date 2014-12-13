@@ -36,7 +36,9 @@ UIViewController::UIViewController(){
 
 UIViewController::~UIViewController(){
 
-
+    delete appCore;
+    delete appGui;
+    delete mainWindow;
 }
 
 Node* UIViewController::createNode(){

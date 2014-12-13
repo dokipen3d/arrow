@@ -11,6 +11,14 @@ using namespace std;
 
 UIViewPortController::~UIViewPortController(){
 
+    delete viewLeft;
+    if(viewRight){
+        delete viewRight;
+    }
+    if(divider){
+        delete divider;
+    }
+
 }
 
 void UIViewPortController::Init(){

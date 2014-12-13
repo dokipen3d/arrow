@@ -122,7 +122,10 @@ void UIWindow::connectNodes(int outputNode_id, int inputNode_id, int fromPlugID,
 
 
 UIWindow::~UIWindow(){
-
+    delete vpCntlr;
+    delete testCntlr;
+    delete testCntlr2;
+    delete testCntlr3;
 }
 
 void UIWindow::setViewController(UIViewController *controller){
