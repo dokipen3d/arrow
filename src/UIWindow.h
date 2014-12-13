@@ -95,6 +95,7 @@ public:
 
     GLFWwindow* getWindow();
     TextEngine* textEngine;
+    bool programRunning;
 
 };
 

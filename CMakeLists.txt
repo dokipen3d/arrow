@@ -1,4 +1,4 @@
-project(fluidSim)
+project(arrow)
 cmake_minimum_required(VERSION 2.8)
 
 message("system: ${CMAKE_SYSTEM_PREFIX_PATH}")
@@ -42,7 +42,7 @@ include_directories(/usr/local/include/freetype2)
 
 
 #-lstdc++ -stdlib=libc++
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   -std=c++1y -pedantic  -O1")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   -std=c++1y -pedantic  -O3")
 
 aux_source_directory(src/ SRC_LIST)
 add_executable(${PROJECT_NAME} ${SRC_LIST})
@@ -57,4 +57,3 @@ link_directories(/usr/local/lib/)
 
 
 target_link_libraries(${PROJECT_NAME} GLEW ${FREETYPE_LIBRARIES} ${GLFW_LIBRARIES} ${OPENGL_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} )

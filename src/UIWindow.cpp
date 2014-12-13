@@ -37,6 +37,7 @@ void UIWindow::Init(){
 
     eventHandler = NULL;
     parentViewID = -1; //parent is self
+    programRunning = true;
 
 }
 
@@ -44,7 +45,7 @@ void UIWindow::Init(){
 void UIWindow::GLLoop(){
 
     cout << "in GLLoop" << std::endl;
-  while(1)
+  while(programRunning)
     {
     //
 
@@ -74,7 +75,7 @@ void UIWindow::resetViewport()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    cout << "frustrum right " << frustrum.right << std::endl;
+    //cout << "frustrum right " << frustrum.right << std::endl;
     glOrtho(frustrum.left, frustrum.right, frustrum.bottom, frustrum.top, 100, -100);
 
 
@@ -328,6 +329,10 @@ void UIWindow::setHandler(GLGui *eventHandlerPassThrough)
 
 void UIWindow::handleEvent(keyStoreStruct key)
 {
+
+    if (key.key == GLFW_KEY_ESCAPE){
+        programRunning = false;
+    }
     //Mouse buttons on their own......
     //cout << "in event handler" << endl;
     switch (key.mouseActionStore)
@@ -397,7 +402,7 @@ int UIWindow::nodeIDUnderMousePos(keyStoreStruct key)
 
 		pRGB = new unsigned char[4];
 
-		glReadPixels( key.Mx, viewRect.size.height-key.My, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pRGB);
+        glReadPixels( key.Mx*scaleFactor, (viewRect.size.height-key.My)*scaleFactor, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pRGB);
 		cout << "passed mouse value is " << key.Mx << endl;
 
 		int id = (pRGB[ 0 ]) + (pRGB[ 1 ]*256) + (pRGB[ 2 ]*256*256);

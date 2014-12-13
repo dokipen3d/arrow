@@ -52,13 +52,15 @@ void GLGui::MousePosCallback (GLFWwindow* window, double xpos, double ypos){
 void GLGui::processEvents(){//called in main loop and forwards events to windows for further handling
 
     //if multiple windows then iterate through window refrences and send them. one window for now.
-    //cout  << "calling eventWindow handler" << endl;
     eventWindow->handleEvent(keyStore);
+
+    //cout  << "calling eventWindow handler" << endl;
     if (windowResized == true)
     {
         eventWindow->setSize(windowRect.size.width, windowRect.size.height);
         windowResized = false;
     }
+
 
 
 }
