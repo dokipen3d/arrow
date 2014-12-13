@@ -29,7 +29,7 @@ int main( int argc, char* argv[] )
 
     UIViewController *viewController = new UIViewController;
     //mainCore->appLoop();
-    delete viewController;
+    //delete viewController;
 
 
   return 0;
