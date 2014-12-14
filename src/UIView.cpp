@@ -50,42 +50,46 @@ UIView::UIView(UIWindow *root, int width, int height){
 }
 
 UIView::~UIView(){
+            cout << "in UIView id " << globalIndexID << " destructor" << endl;
+//            //get node parent
+
+//            if (globalIndexID != 0){
+//            UIView* parent = getParent();
 
 
+//            //first remove this UIView from it's parent's children ID store and update the parents list
+//            //make sure the child list has something in it.
+//            if (parent->UIViewIndexStore.size() > 0){
 
-            //get node parent
-            UIView* parent = this->getParent();
+//                //go through from this view's local id to the end of the child list and update
+//                for (int i = localID-1; i < (int)parent->UIViewIndexStore.size(); i++){
 
-            //make sure the child list has something in it.
-            if (parent->UIViewIndexStore.size() > 0){
+//                        //get id of node at the childlist at the specific index we are currently stored at
+//                        int viewToDecID = parent->UIViewIndexStore.at(i);
 
-                //go through from this view's local id to the end of the child list and update
-                for (int i = localID-1; i < (int)parent->UIViewIndexStore.size(); i++){
-
-                        //get id of node at the childlist at the specific index we are currently stored at
-                        int viewToDecID = parent->UIViewIndexStore.at(i);
-
-                        //copy back the id of the node in front
-                        parent->UIViewIndexStore.at(i) = parent->UIViewIndexStore.at(i+1);
+//                        //copy back the id of the node in front
+//                        parent->UIViewIndexStore.at(i) = parent->UIViewIndexStore.at(i+1);
 
 
-                        UIView *nodeToDecLocID = rootWindow->getNodeFromID(viewToDecID);
-                        nodeToDecLocID->localID--;
+//                        UIView *nodeToDecLocID = rootWindow->getNodeFromID(viewToDecID);
+//                        nodeToDecLocID->localID--;
 
-                        //reset the ids actually stored in
-                        }
-                //finally pop back the child list
-                parent->UIViewIndexStore.pop_back();
+//                        //reset the ids actually stored in
+//                        }
+//                //finally pop back the child list
+//                parent->UIViewIndexStore.pop_back();
 
-            }
+//            }
+//            }
+//            cout << "about to iterate, children size is " << UIViewIndexStore.size() << endl;
 
-            for (viewIndexIterator = UIViewIndexStore.begin() ; viewIndexIterator < UIViewIndexStore.end(); viewIndexIterator++){
+//            for (viewIndexIterator = UIViewIndexStore.begin() ; viewIndexIterator < UIViewIndexStore.end(); viewIndexIterator++){
 
-                cout << "deleting child node " << *viewIndexIterator << endl;
-                delete rootWindow->getNodeFromID((*viewIndexIterator));
+//                cout << "deleting child node " << *viewIndexIterator << endl;
+//                //delete rootWindow->getNodeFromID((*viewIndexIterator));
+//                rootWindow->deRegisterView(*viewIndexIterator);
 
-            }
-
+//            }
 }
 
 void UIView::setParentID(int parentID)
@@ -105,12 +109,13 @@ void UIView::resolveSize()
 
 void UIView::addSubView(UIView* newView)
 {
-    rootWindow->registerView(newView, this);
+    rootWindow->registerView(newView, (UIView*)this);
 }
 
 
 UIView* UIView::getParent(){
 
+    //cout << "getting parent" << endl;
     return rootWindow->getNodeFromID(parentViewID);
 
 }
@@ -232,6 +237,52 @@ void UIView::DrawSelectPass(){
 void UIView::printID()
 {
     cout << "PRINT: id is " << globalIndexID << endl;
+}
+
+void UIView::deRegisterChildren()
+{
+    cout << "in UIView id " << globalIndexID << " deregistering children" << endl;
+    //get node parent
+
+    //window doesnt have parents so doesnt need to rearrange the parents children list
+    if (globalIndexID != 0){
+    UIView* parent = getParent();
+
+
+    //first remove this UIView from it's parent's children ID store and update the parents list
+    //make sure the child list has something in it.
+//    if (parent->UIViewIndexStore.size() > 0){
+
+//        //go through from this view's local id to the end of the child list and update
+//        for (int i = localID-1; i < (int)parent->UIViewIndexStore.size(); i++){
+
+//                //get id of node at the childlist at the specific index we are currently stored at
+//                int viewToDecID = parent->UIViewIndexStore.at(i);
+
+//                //copy back the id of the node in front
+//                parent->UIViewIndexStore.at(i) = parent->UIViewIndexStore.at(i+1);
+
+
+//                UIView *nodeToDecLocID = rootWindow->getNodeFromID(viewToDecID);
+//                nodeToDecLocID->localID--;
+
+//                //reset the ids actually stored in
+//                }
+//        //finally pop back the child list
+//        parent->UIViewIndexStore.pop_back();
+
+//    }
+    }
+    cout << "about to iterate, children size is " << UIViewIndexStore.size() << endl;
+
+    for (viewIndexIterator = UIViewIndexStore.begin() ; viewIndexIterator < UIViewIndexStore.end(); viewIndexIterator++){
+
+        cout << "deleting child node " << *viewIndexIterator << endl;
+        //delete rootWindow->getNodeFromID((*viewIndexIterator));
+        rootWindow->deRegisterView(*viewIndexIterator);
+
+    }
+
 }
 
 void UIView::DrawSelectPassSubViews()

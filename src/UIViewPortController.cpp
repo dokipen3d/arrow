@@ -11,13 +11,15 @@ using namespace std;
 
 UIViewPortController::~UIViewPortController(){
 
-    delete viewLeft;
-    if(viewRight){
-        delete viewRight;
-    }
-    if(divider){
-        delete divider;
-    }
+
+    cout << "in vpctr de" << endl;
+//    delete viewLeft;
+//    if(viewRight){
+//        delete viewRight;
+//    }
+//    if(divider){
+//        delete divider;
+//    }
 
 }
 

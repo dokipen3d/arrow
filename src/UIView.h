@@ -29,13 +29,24 @@ class UIView {
 
     protected:
 
+        //store a pointer to main window. We dont own it so its a raw pointer
+        //only need to refer to it.
         UIWindow *rootWindow;
+
+        //the id of this views parent. We can ask the main window to give it to us
         int parentViewID;
-        vector<int> UIViewIndexStore;//store indexes to children. only store indexes because I only want ONE place to store the actuall addresses of all the views. best place I can think of is in the window that owns them all. As soon as I start having multiple places where addresses can be stores it can get complex.
+
+        //store indexes to children.
+        //only store indexes because I only want ONE place to store the actuall addresses of all the views
+        //best place I can think of is in the window that owns them all.
+        //As soon as I start having multiple places where addresses can be stores it can get complex.
+        vector<int> UIViewIndexStore;
         vector<int>::iterator viewIndexIterator;
-        int viewCount;//how many view are its children. mainly for controlling vpCntlr dividers
 
+        //how many view are its children. mainly for controlling vpCntlr dividers
+        int viewCount;
 
+        //helper variables for drawing in selection mode
         GLubyte drawIDColour[3];
         GLfloat viewColour[4];
 
@@ -43,6 +54,7 @@ class UIView {
         bool drawable;
         bool childrenDrawable;
 
+        //local helper storage for control management
         bool lmbPressed;
 
 
@@ -73,6 +85,8 @@ class UIView {
         UIPoint getWorldPos();
         void addSubView(UIView* newView);
         void printID();
+        void deRegisterChildren();
+
 
         //bool stopWorldPosSearch;//for VPts to know when they don't need to search any more higher.
         virtual void resolveSize();//to notify children of parent resizing.

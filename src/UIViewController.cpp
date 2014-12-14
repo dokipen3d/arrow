@@ -18,6 +18,7 @@ UIViewController::UIViewController(){
     appCore->setViewController(this);
 
     mainWindow = new UIWindow(NULL, 1024, 576 ); //set windows to be 0 as it is stored by itself at index 0.
+    //register self
     mainWindow->registerView(mainWindow, (UIView*)this);
     mainWindow->setViewController(this);
     //mainWindow->setHandler(appGui);
@@ -38,6 +39,9 @@ UIViewController::~UIViewController(){
 
     delete appCore;
     delete appGui;
+    //here is a bug!
+    cout << "calling vc destructor" << endl;
+    mainWindow->deRegisterChildren();
     delete mainWindow;
 }
 

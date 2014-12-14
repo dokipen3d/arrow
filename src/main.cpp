@@ -15,6 +15,7 @@
 //#include <glew.h>
 #include <GLFW/glfw3.h>
 #endif
+#include <memory>
 
 
 
@@ -27,7 +28,8 @@ int main( int argc, char* argv[] )
 
 
 
-    UIViewController *viewController = new UIViewController;
+    //UIViewController *viewController = new UIViewController;
+    auto viewController = make_unique<UIViewController>();
     //mainCore->appLoop();
     //delete viewController;
 

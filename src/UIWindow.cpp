@@ -9,12 +9,15 @@ using namespace std;
 void UIWindow::Init() {
 
   UIView::Init();
+
+
+
   rootWindow = this; // set to self so that when doing draw pass we draw from
                      // top down draw select pass needs pointer to root
                      // window(ourself)
   vpCntlr = new UIViewPortController(this, viewRect.size.width,
                                      viewRect.size.height, HORIZONTAL);
-  registerView(vpCntlr, this);
+  registerView(vpCntlr, (UIView*)this);
   vpCntlr->divide(0.06);
 
   UIViewPortController *testCntlr =
@@ -50,6 +53,7 @@ void UIWindow::GLLoop() {
 
     // glfwPollEvents();
   }
+  cout << "exiting loop" << endl;
 }
 
 void UIWindow::ForceRefresh() {
@@ -100,8 +104,14 @@ void UIWindow::connectNodes(int outputNode_id, int inputNode_id, int fromPlugID,
 }
 
 UIWindow::~UIWindow() {
-  delete vpCntlr;
-
+    cout  << "in UIWindow destructor" << endl;
+    for (auto x : vUIViewGlobalStore){
+        if ((x != NULL) && (x->globalIndexID != 0)){
+            cout << "deleting remaining UIView in global vector as a memory cleanup. lets hope you saved!" << endl;
+            delete x;
+        }
+    }
+    //delete vpCntlr;
 }
 
 void UIWindow::setViewController(UIViewController *controller) {
@@ -221,7 +231,8 @@ void UIWindow::registerView(UIView *newView, UIView *sender) {
                                     // up.
     printf("spare index is %d\n",
            accessElement); // print the element to see it in console
-    // this->viewIterator = vUIViewStore.begin();					//set iterator to start of
+    // this->viewIterator = vUIViewStore.begin();					//set iterator to start
+    // of
     // vUIViewStore
 
     vUIViewGlobalStore.at(accessElement - 1) = newView;
@@ -231,6 +242,7 @@ void UIWindow::registerView(UIView *newView, UIView *sender) {
            "is %d\n",
            globalViewCount - 1, (int)vUIViewGlobalStore.size(),
            (int)vUIViewGlobalSpare.size());
+    cout << "newly added view id is " << vUIViewGlobalStore.at(globalViewCount-1) << endl;
     newView->globalIndexID = accessElement - 1;
     newView->setParentID(sender->globalIndexID);
     newView->Init();
@@ -245,43 +257,56 @@ void UIWindow::registerView(UIView *newView, UIView *sender) {
     printf(
         "no spares.increasing vector. view count is %d and vector size is %d\n",
         globalViewCount, (int)vUIViewGlobalStore.size());
+    cout << "newly added view id is " << vUIViewGlobalStore.at(globalViewCount-1)->globalIndexID << endl;
+    cout << "first added view id is " << vUIViewGlobalStore.at(0)->globalIndexID << endl;
+
     newView->setParentID(sender->globalIndexID);
     newView->Init();
   }
 }
 
-void UIWindow::deRegisterView(int id) // delete a view.
+void UIWindow::deRegisterView(int id) // delete a view. and all its children. if you want a child, take it out first!
 {
+    cout << "trying to deregister id " << id << " global store size is " << (int)vUIViewGlobalStore.size() << endl;
 
-  if ((vUIViewGlobalSpare[id - 1] != NULL) &&
-      (id - 1 <
-       (int)vUIViewGlobalStore
-           .size())) { // id less than vector size means it falls within range
-
-    if (id == (int)vUIViewGlobalStore.size()) { // if UIView id is at the end
-      printf("deleting last UIView in vector store\n");
-      delete vUIViewGlobalStore.at(id - 1);
+  // id less than vector size means it falls within range
+  if ((vUIViewGlobalStore[id] != NULL) &&
+      (id < vUIViewGlobalStore.size())) {
+    // if UIView id is at the end
+    if (id == (int)vUIViewGlobalStore.size()) {
+      cout << "deleting last UIView in vector store" << endl;
+      vUIViewGlobalStore.at(id)->deRegisterChildren();
+      delete vUIViewGlobalStore.at(id);
+      vUIViewGlobalStore.at(id) = NULL;
       vUIViewGlobalStore.pop_back();
-      globalViewCount -= 1;
+      globalViewCount--;
       printf("UIviewCount is %d\n",
              (int)(globalViewCount - (this->spareRootIds.size())));
       printf("although vector is still size %d and vSpareStack is size %d\n",
-             (int)vUIViewGlobalStore.size(), (int)this->spareRootIds.size());
+             (int)vUIViewGlobalStore.size(), (int)this->vUIViewGlobalSpare.size());
 
     }
 
     else {
+        cout << "else deleting" << endl;
       // this->nodeIterator = vNodeStore.begin();      //why iterate again?
-      delete vUIViewGlobalStore[id - 1]; // vNodeStore.erase(myIT+id-1);
+        cout << "current id is " << globalIndexID << endl;
+        cout << "size of global store is " << (int)vUIViewGlobalStore.size() << endl;
+        cout << "deregistering id in global at id " << vUIViewGlobalStore[id]->globalIndexID << endl;
+        vUIViewGlobalStore.at(id)->deRegisterChildren();
+        delete vUIViewGlobalStore.at(id); // vNodeStore.erase(myIT+id-1);
                                          // //delete the element at the index
                                          // specified by id
-      spareRootIds.push_back(id); // add the spare slot to sparestack
-      vUIViewGlobalStore[id - 1] = NULL;
-      globalViewCount -= 1;
-      printf("nodeCount is %d\n",
+        //deRegisterView(id);
+        cout << "deleted node id " << id << endl;
+
+      vUIViewGlobalSpare.push_back(id);        // add the spare slot to sparestack
+      vUIViewGlobalStore[id] = NULL;
+      globalViewCount--;
+      printf("viewCount is %d.If 1 is left then it is the main window view last\n",
              (int)(globalViewCount - (this->spareRootIds.size())));
       printf("although vector is still size %d and vSpareStack is size %d\n",
-             (int)vUIViewGlobalStore.size(), (int)this->spareRootIds.size());
+             (int)vUIViewGlobalStore.size(), (int)this->vUIViewGlobalSpare.size());
     }
 
   } else
@@ -298,6 +323,7 @@ void UIWindow::handleEvent(keyStoreStruct key) {
 
   if (key.key == GLFW_KEY_ESCAPE) {
     programRunning = false;
+    return;
   }
   // Mouse buttons on their own......
   // cout << "in event handler" << endl;

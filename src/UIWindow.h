@@ -45,7 +45,7 @@ private:
   UIViewController *viewController;
   frustrumStruct frustrum;
 
-  // store a pointer to the app viewport controller
+  // store a pointer to the app viewport controller. we dont own it so its just a raw pointer
   UIViewPortController *vpCntlr;
   GLGui *eventHandler; // points to already existing handler.
 
@@ -60,6 +60,8 @@ public:
     cout << "UIWindow Constructor" << endl;
     globalViewCount = 0; // 0 is our windows so other views will be above that
     setDrawable(false);
+    vUIViewGlobalStore.clear();
+
   }
 
   ~UIWindow();
