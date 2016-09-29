@@ -92,13 +92,16 @@ atlas::atlas(FT_Face face, int height)
 
     for (int i = 32; i < 128; i++)
     {
-        if (FT_Load_Char(face, i,FT_LOAD_DEFAULT))
+       // if (FT_Load_Char(face, i, FT_LOAD_MONOCHROME|FT_LOAD_TARGET_MONO))    //load with no AA
+
+        if (FT_Load_Char(face, i,FT_LOAD_DEFAULT)) // load normal
         {
             fprintf(stderr, "Loading character %c failed!\n", i);
             continue;
         }
 
-        if(FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL))
+        if(FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL))// normal
+       //if(FT_Render_Glyph( face->glyph, FT_RENDER_MODE_MONO ))// no AA
         {
             fprintf(stderr, "rendering character %c failed!\n", i);
             continue;
@@ -194,23 +197,25 @@ void TextEngine::initResources()
      }
 
 
-    if(FT_New_Face(ft, "/Users/dokipen/Documents/Projects/arrow/src/Helvetica.ttf", 0, &face)) {
+    if(FT_New_Face(ft, "/Users/delliott/Documents/Projects/arrow/src/Oxygen-Regular.ttf", 0, &face)) {
       fprintf(stderr, "Could not open font\n");
       return;
     }
     cout << "fonts loaded" << endl;
     textShader = new ShaderObject();
 
-    textShader->loadProgram("/Users/dokipen/Documents/Projects/arrow/src/textShader.vert", "/Users/dokipen/Documents/Projects/arrow/src/textShader.frag");
-    //checkGLError();
+    textShader->loadProgram("/Users/delliott/Documents/Projects/arrow/src/textShader.vert", "/Users/delliott/Documents/Projects/arrow/src/textShader.frag");
+    checkGLError();
 
-    //textShader->printProgramLog(textShader->getProgramID());
+    textShader->printProgramLog(textShader->getProgramID());
 
     cout << "shader created" << endl;
 
-    glGenVertexArrays(1, &vao);
+
+    //TODO disabled all vao objects because on OSX still gl 2.1 and am using glVertexAttribPointer
+    //glGenVertexArrays(1, &vao);
     //checkGLError();
-    glBindVertexArray(vao);
+    //glBindVertexArray(vao);
     //checkGLError();
 
 
@@ -218,16 +223,20 @@ void TextEngine::initResources()
     //glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
     textShader->bind();
+    //added for osx https://www.opengl.org/wiki/GLSL_:_common_mistakes
+    glUseProgram(textShader->getProgramID());
+
+    //shaderMatrix = get_uniform(textShader->getProgramID(), "modelViewProjectionMatrix");
+
 
     attribute_position = get_attrib(textShader->getProgramID(), "vPosition");
     //checkGLError();
 
-    shaderMatrix = get_uniform(textShader->getProgramID(), "modelViewProjectionMatrix");
     //checkGLError();
 
 
     uniform_tex = get_uniform(textShader->getProgramID(), "tex");
-    checkGLError();
+    //checkGLError();
     textShader->unbind();
     //
     //

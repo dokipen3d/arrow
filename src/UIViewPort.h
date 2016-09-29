@@ -2,7 +2,7 @@
 #define UIVIEWPORT_H
 
 #include "UIView.h"
-#include "TextEngine.h"
+//#include "TextEngine.h"
 
 //for setting the viewport of opengl
 

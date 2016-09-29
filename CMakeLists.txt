@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 2.8)
 
 message("system: ${CMAKE_SYSTEM_PREFIX_PATH}")
 
-set(CMAKE_C_COMPILER "/usr/local/bin/gcc")
-set(CMAKE_CXX_COMPILER "/usr/local/bin/g++")
+set(CMAKE_C_COMPILER "/usr/local/bin/gcc-6")
+set(CMAKE_CXX_COMPILER "/usr/local/bin/g++-6")
 
 #set up linux search paths
 set(LIBRARY_SEARCH_PATH

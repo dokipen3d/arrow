@@ -1,9 +1,10 @@
 #version 120
 
 
-uniform mat4 modelViewProjectionMatrix;
-in vec4 vPosition;
-varying out  vec2 texcoords;
+//uniform mat4 modelViewProjectionMatrix;
+
+attribute vec4 vPosition;
+varying  vec2 texcoords;
 
 
 void main() {

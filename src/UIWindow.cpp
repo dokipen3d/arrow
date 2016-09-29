@@ -78,23 +78,30 @@ void UIWindow::resetViewport() {
 
 void UIWindow::DrawGui() {
 
+
   resetViewport();
+
+
 
   // cout << "about to draw VPCntlr" << endl;
   // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glClear(GL_COLOR_BUFFER_BIT);
 
+
   // glDisable(GL_TEXTURE_2D);
 
   vpCntlr->Draw();
 
-  // resetViewport();
+   resetViewport();
 
-  // textEngine->render_text("The quick brown fox jumps",  0, 250, 1.0f, 1.0f);
-  // textEngine->render_text("Yep sure is",  200.0f, 500.0f, 1.0f, 1.0f);
+
 
   // cout << "got here" << endl;
   // glTranslatef(0.0, 0.0, -1);
+
+  textEngine->render_text("The quick brown fox jumps",  0, 200, 1.0f, 1.0f);
+   textEngine->render_text("Yep sure is",  200.0f, 500.0f, 1.0f, 1.0f);
+
 }
 
 void UIWindow::connectNodes(int outputNode_id, int inputNode_id, int fromPlugID,
@@ -132,8 +139,8 @@ void UIWindow::InitGL(const char *name) {
   // mainCore = mainAppCore;
 
   // 800 x 600, 16 bit color, no depth, alpha or stencil buffers, windowed
-  // glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 3 );
-  // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+ // glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 2 );
+ // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
   // glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE );
   // glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
 
@@ -211,11 +218,11 @@ void UIWindow::InitGL(const char *name) {
 
   cout << "about to create text engine" << std::endl;
 
-  // textEngine = new TextEngine();
+  textEngine = new TextEngine();
   {}
-  // textEngine->initResources();
+  textEngine->initResources();
 
-  // windowShader = new ShaderObject("textShader.vert", "textShader.frag");
+  //windowShader = new ShaderObject("textShader.vert", "textShader.frag");
   // GLuint newProg = glCreateProgram();
 }
 
