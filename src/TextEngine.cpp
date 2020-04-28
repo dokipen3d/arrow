@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>
+#include <vector>
 
 
 
@@ -41,8 +42,8 @@ atlas::atlas(FT_Face face, int height)
 
     //load face into memory
     for(int i = 32; i < 128; i++)
-    {
-        if(FT_Load_Char(face, i, FT_LOAD_RENDER	))
+    {   // FT_LOAD_RENDER|FT_LOAD_MONOCHROME
+        if(FT_Load_Char(face, i, FT_LOAD_RENDER))
         {
             fprintf(stderr, "Loading character %c failed!\n", i);
             continue;
@@ -197,19 +198,19 @@ void TextEngine::initResources()
      }
 
 
-    if(FT_New_Face(ft, "/Users/delliott/Documents/Projects/arrow/src/Oxygen-Regular.ttf", 0, &face)) {
+    if(FT_New_Face(ft, "Oxygen-Regular.ttf", 0, &face)) {
       fprintf(stderr, "Could not open font\n");
       return;
     }
-    cout << "fonts loaded" << endl;
+    cout << "fonts loaded" << "\n";
     textShader = new ShaderObject();
 
-    textShader->loadProgram("/Users/delliott/Documents/Projects/arrow/src/textShader.vert", "/Users/delliott/Documents/Projects/arrow/src/textShader.frag");
+    textShader->loadProgram("textShader.vert", "textShader.frag");
     checkGLError();
 
     textShader->printProgramLog(textShader->getProgramID());
 
-    cout << "shader created" << endl;
+    cout << "shader created" << "\n";
 
 
     //TODO disabled all vao objects because on OSX still gl 2.1 and am using glVertexAttribPointer
@@ -318,8 +319,9 @@ void TextEngine::render_text(const char *text, float x, float y, float sx, float
 
 
 
-
-    point coords[6 * strlen(text)];
+    std::vector<point> coords;
+    coords.resize(6 * strlen(text));
+    //point coords[6 * strlen(text)];
     //point2 *coords = (point2*)malloc(sizeof(point2) * 6 * strlen(text));
     //glBufferData(GL_ARRAY_BUFFER, sizeof (coords), coords, GL_DYNAMIC_DRAW);
 
@@ -396,7 +398,7 @@ void TextEngine::render_text(const char *text, float x, float y, float sx, float
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     //checkGLError();
-    glBufferData(GL_ARRAY_BUFFER, sizeof (coords), coords, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof (point) * coords.size(), coords.data(), GL_DYNAMIC_DRAW);
     //checkGLError();
     glVertexAttribPointer(attribute_position, 4, GL_FLOAT, GL_FALSE, 0, 0);
     //checkGLError();

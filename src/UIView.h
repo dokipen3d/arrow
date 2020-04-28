@@ -2,15 +2,9 @@
 #define UIVIEW_H
 
 #include <vector>
-#ifdef _WIN32
 #include <GL/glew.h>
 //#define GLEW_STATIC
-//#include "C:\Users\dokipen\Documents\Visual Studio 2010\libs\glew-1.9.0\include\GL\glew.h"
-#include "C:\Users\dokipen\Documents\Visual Studio 2010\libs\glfw-2.7.7.bin.WIN32\include\GL\glfw.h"
-#else
-#include <GL/glew.h>
-#include "/usr/local/include/GLFW/glfw3.h"
-#endif
+#include <GLFW/glfw3.h>
 #include "PlugTypes.h"
 
 

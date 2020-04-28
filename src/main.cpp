@@ -6,15 +6,11 @@
 #include <stdlib.h>
 #include "UIViewController.h"
 
-#ifdef _WIN32
-#include <glew.h>
-#include "C:\Users\dokipen\Documents\Visual Studio 2010\libs\glfw-2.7.7.bin.WIN32\include\GL\glfw.h"
-#else
-#define GLEW_STATIC
+//#define GLEW_STATIC
 #include <GL/glew.h>
 //#include <glew.h>
 #include <GLFW/glfw3.h>
-#endif
+
 #include <memory>
 
 

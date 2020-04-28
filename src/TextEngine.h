@@ -2,10 +2,8 @@
 #define TEXTENGINE_H
 
 
-#ifdef _WIN32
-//
-#else
-#include <freetype2/ft2build.h>
+
+#include <ft2build.h>
 #include FT_FREETYPE_H
 //#include "GL/glew.h"
 
@@ -132,4 +130,3 @@ private:
 
 };
 
-#endif

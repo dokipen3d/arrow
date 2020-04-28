@@ -12,7 +12,7 @@ using namespace std;
 UIViewPortController::~UIViewPortController(){
 
 
-    cout << "in vpctr de" << endl;
+    cout << "in vpctr de" << "\n";
 //    delete viewLeft;
 //    if(viewRight){
 //        delete viewRight;
@@ -51,7 +51,7 @@ void UIViewPortController::Init(){
         //divide();
 
     }
-    cout << "in VPCtlr id " << globalIndexID << "about to resolveSize" << endl;
+    cout << "in VPCtlr id " << globalIndexID << "about to resolveSize" << "\n";
     resolveSize();
 
 
@@ -61,7 +61,7 @@ void UIViewPortController::divide(float divPC){
 
     DIVIDED = true;
 
-    cout << "dividing" << endl;
+    cout << "dividing" << "\n";
 
     if (oriented == VERTICAL){
         divPercentLocation = divPC;
@@ -106,12 +106,12 @@ void UIViewPortController::resolveSize()
 
     if (DIVIDED)
     {
-        cout << "divPos is " << divPosition << endl;
+        //cout << "divPos is " << divPosition << "\n";
 
     }
 
-    cout << "resolvedSize is " << viewRect.size.width << endl;
-    cout << "resolvePos is " << viewRect.point.x << endl;
+    //cout << "resolvedSize is " << viewRect.size.width << "\n";
+    //cout << "resolvePos is " << viewRect.point.x << "\n";
     //call to resize children
     resizeGlobalSubViewPorts();
 
@@ -122,7 +122,7 @@ void UIViewPortController::resizeGlobalSubViewPorts()//for setting up sizes afte
 {
     //grab global pos of VPCtlr
     UIPoint globalPosOfParentVPCtlr = getWorldPos();
-    cout << "global Pos of parent VPCTlr is " << globalPosOfParentVPCtlr.x << endl;
+    //cout << "global Pos of parent VPCTlr is " << globalPosOfParentVPCtlr.x << "\n";
 
     if (oriented == VERTICAL)
     {
@@ -257,14 +257,14 @@ void UIViewPortController::viewClicked(keyStoreStruct key, int senderID){
     //if sender is less than my viewcount (ie is the caller one of my children)
     //if odd then its a divider. if even its a sub view that doesnt reaarange.
     //then store mouse pos and set mousebutton pressed.
-    cout << "viewport contrler recieved click" << endl;
+    //cout << "viewport contrler recieved click" << endl;
     if ((senderID % 2) == 1 ) //called from divider, use mod incase we want to implement multiple divides
     {
 
             localKeyStore.LMx = key.Mx;
             localKeyStore.LMy = key.My;
-            cout << localKeyStore.LMx << endl;
-            cout << localKeyStore.LMy << endl;
+            //cout << localKeyStore.LMx << endl;
+            //cout << localKeyStore.LMy << endl;
 
     }
 
@@ -282,7 +282,7 @@ void UIViewPortController::viewDragged(keyStoreStruct key, int senderID){
     //float mouseOffSetY = localKeyStore.LMy - keyStoreStruct.My;
 
     //resizeFromDivider(int offsetX, int offsetY, int localID);
-    cout << "senderID was " << senderID << endl;
+    //cout << "senderID was " << senderID << endl;
 
 
 
@@ -290,24 +290,24 @@ void UIViewPortController::viewDragged(keyStoreStruct key, int senderID){
     {
         if (oriented == VERTICAL)
         {
-            cout << " in VP dragged" << endl;
-            cout << localKeyStore.LMx << endl;
+            //cout << " in VP dragged" << endl;
+            //cout << localKeyStore.LMx << endl;
             localKeyStore.Mx = key.Mx;
-            cout << localKeyStore.Mx << endl;
+            //cout << localKeyStore.Mx << endl;
             int offset = localKeyStore.Mx - localKeyStore.LMx;
-            cout << "offset is " << offset << endl;
+            //cout << "offset is " << offset << endl;
             localKeyStore.LMx = key.Mx;
             resizeFromDivider(offset, 0 );
         }
 
         if (oriented == HORIZONTAL)
         {
-            cout << " in VP dragged" << endl;
-            cout << localKeyStore.LMy << endl;
+            //cout << " in VP dragged" << endl;
+            //cout << localKeyStore.LMy << endl;
             localKeyStore.My = key.My;
-            cout << localKeyStore.My << endl;
+            //cout << localKeyStore.My << endl;
             int offset = localKeyStore.My - localKeyStore.LMy;
-            cout << "offset is " << offset << endl;
+            //cout << "offset is " << offset << endl;
             localKeyStore.LMy = key.My;
             resizeFromDivider(0, offset );
         }
@@ -324,16 +324,16 @@ void UIViewPortController::viewReleased(keyStoreStruct key, int senderID){
 
     //draggin release
     //reset divPos
-    cout << "in VP release " << senderID << endl;
+    //cout << "in VP release " << senderID << endl;
     if ((senderID % 2) == 1 )
     {
-        cout << " in VP released" << endl;
+        //cout << " in VP released" << endl;
         if (oriented == VERTICAL)
         {
             //cout << viewLeft->getRect().size.width << endl;
             //cout << viewRect.size.width << endl;
             float newPercent = (float)viewLeft->getRect().size.width / (float)viewRect.size.width;
-            cout << "new percent = " << newPercent << endl;
+            //cout << "new percent = " << newPercent << endl;
             divPercentLocation = newPercent;
         }
 
@@ -342,7 +342,7 @@ void UIViewPortController::viewReleased(keyStoreStruct key, int senderID){
             //cout << viewLeft->getRect().size.width << endl;
             //cout << viewRect.size.width << endl;
             float newPercent = (float)viewLeft->getRect().size.height / (float)viewRect.size.height;
-            cout << "new percent = " << newPercent << endl;
+            //cout << "new percent = " << newPercent << endl;
             divPercentLocation = newPercent;
         }
     }
@@ -354,7 +354,7 @@ void UIViewPortController::resizeFromDivider(int offsetX, int offsetY)
 
             if (oriented == VERTICAL)
             {
-                cout << " in resizefromdivider. offset is " << offsetX << endl;
+                //cout << " in resizefromdivider. offset is " << offsetX << endl;
                 viewLeft->offsetSize(offsetX, 0);
 
                 //viewLeft->offsetGlobalPosition(offsetX, globalPosOfParentVPCtlr.y);
@@ -363,7 +363,7 @@ void UIViewPortController::resizeFromDivider(int offsetX, int offsetY)
                 divider->offsetGlobalPosition(offsetX, 0);
 
                 viewRight->offsetSize(-1*offsetX,0);
-                cout << " got here." << endl;
+                //cout << " got here." << endl;
 
                 viewRight->offsetGlobalPosition(offsetX, 0);
                 viewRight->resolveSize();
@@ -371,7 +371,7 @@ void UIViewPortController::resizeFromDivider(int offsetX, int offsetY)
 
             if (oriented == HORIZONTAL)
             {
-                cout << " in resizefromdivider. offset is " << offsetY << endl;
+                //cout << " in resizefromdivider. offset is " << offsetY << endl;
                 viewLeft->offsetSize(0, -offsetY);
                 //viewRight->offsetSize(0,-1*offsetY);
 

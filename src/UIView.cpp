@@ -2,7 +2,8 @@
 #include "UIWindow.h"
 #include <stdio.h>
 #include <iostream>
-#include <string.h>
+#include <algorithm>
+#include <string>
 #include <cstdlib>
 #include "Node.h"
 #include <math.h>
@@ -31,7 +32,7 @@ UIView::UIView(UIWindow *root, int width, int height){
     }
     else{
         root = NULL;
-        cout << "no window assigned" << std::endl;
+        cout << "no window assigned" << "\n";
     }
 
     viewRect.point.x = 0.0;
@@ -50,7 +51,7 @@ UIView::UIView(UIWindow *root, int width, int height){
 }
 
 UIView::~UIView(){
-            cout << "in UIView id " << globalIndexID << " destructor" << endl;
+            cout << "in UIView id " << globalIndexID << " destructor" << "\n";
 //            //get node parent
 
 //            if (globalIndexID != 0){
@@ -131,7 +132,7 @@ UIPoint UIView::getWorldPos()
     }
 
     //return UIPoint(globalRect.point.x + tempRect.x, globalRect.point.y + tempRect.y);
-    return UIPoint(max(globalRect.point.x, tempRect.x), max(globalRect.point.y, tempRect.y));
+    return UIPoint(std::max(globalRect.point.x, tempRect.x), std::max(globalRect.point.y, tempRect.y));
 
 
 }
@@ -143,7 +144,7 @@ void UIView::Init(){//do extra stuff
     //call parent and inc viewCount and set local id
     if (globalIndexID != 0){ //  if this UIview is not the root window
         UIView* parent = rootWindow->getNodeFromID(parentViewID);
-        cout << "parent ID of node " << globalIndexID << " is" << parentViewID << endl;
+        cout << "parent ID of node " << globalIndexID << " is" << parentViewID << "\n";
 
         localID = parent->viewCount;
         parent->viewCount++;
@@ -212,7 +213,7 @@ void UIView::DrawSubViews(){
 
 void UIView::DrawSelectPass(){
 
-    cout << "drawing selectPass" <<endl;
+    //cout << "drawing selectPass" << "\n";
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
 
@@ -236,12 +237,12 @@ void UIView::DrawSelectPass(){
 
 void UIView::printID()
 {
-    cout << "PRINT: id is " << globalIndexID << endl;
+    //cout << "PRINT: id is " << globalIndexID << "\n";
 }
 
 void UIView::deRegisterChildren()
 {
-    cout << "in UIView id " << globalIndexID << " deregistering children" << endl;
+    //cout << "in UIView id " << globalIndexID << " deregistering children" << "\n";
     //get node parent
 
     //window doesnt have parents so doesnt need to rearrange the parents children list
@@ -273,11 +274,11 @@ void UIView::deRegisterChildren()
 
 //    }
     }
-    cout << "about to iterate, children size is " << UIViewIndexStore.size() << endl;
+   // cout << "about to iterate, children size is " << UIViewIndexStore.size() << "\n";
 
     for (viewIndexIterator = UIViewIndexStore.begin() ; viewIndexIterator < UIViewIndexStore.end(); viewIndexIterator++){
 
-        cout << "deleting child node " << *viewIndexIterator << endl;
+        //cout << "deleting child node " << *viewIndexIterator << "\n";
         //delete rootWindow->getNodeFromID((*viewIndexIterator));
         rootWindow->deRegisterView(*viewIndexIterator);
 
@@ -287,13 +288,13 @@ void UIView::deRegisterChildren()
 
 void UIView::DrawSelectPassSubViews()
 {
-    cout << "viewCOunt is " << viewCount << endl;
-    cout << "vector size is " << UIViewIndexStore.size() << endl;
+    //cout << "viewCOunt is " << viewCount << "\n";
+    //cout << "vector size is " << UIViewIndexStore.size() << "\n";
     for (viewIndexIterator = UIViewIndexStore.begin() ; viewIndexIterator < UIViewIndexStore.end(); viewIndexIterator++){
 
-            cout << "in vertex index iterator of node ID " << globalIndexID <<  " next node id is " << *viewIndexIterator << endl;
+            //cout << "in vertex index iterator of node ID " << globalIndexID <<  " next node id is " << *viewIndexIterator << "\n";
 			rootWindow->getNodeFromID(*viewIndexIterator)->DrawSelectPass();
-			cout << "drew pass" << endl;
+			//cout << "drew pass" << "\n";
     }
 
 }
@@ -335,11 +336,11 @@ UIRect UIView::getRect(){
 void UIView::viewClicked(keyStoreStruct key, int senderID){//default just calls parent viewClicked. if parent == NULL then do nothinng.
 
 
-    cout << "view clicked called in node " << globalIndexID << endl;
-    cout << "parentID is " << parentViewID << endl;
+    //cout << "view clicked called in node " << globalIndexID << "\n";
+    //cout << "parentID is " << parentViewID << "\n";
     if (parentViewID < 0){
 
-        cout << "no parent. must be a window. returning." << std::endl;
+        //cout << "no parent. must be a window. returning." << "\n";
         return;
 
     }
@@ -355,10 +356,10 @@ void UIView::viewClicked(keyStoreStruct key, int senderID){//default just calls 
 }
 void UIView::viewDragged(keyStoreStruct key, int senderID){
 
-    cout << "view dragged called in node " << globalIndexID << endl;
-    cout << "parentID is " << parentViewID << endl;
+    //cout << "view dragged called in node " << globalIndexID << "\n";
+    //cout << "parentID is " << parentViewID << "\n";
     if (parentViewID < 0 ){
-        cout << "no parent. must be a window. returning" << std::endl;
+        //cout << "no parent. must be a window. returning" << "\n";
         return;
 
     }
@@ -372,7 +373,7 @@ void UIView::viewDragged(keyStoreStruct key, int senderID){
 void UIView::viewReleased(keyStoreStruct key, int senderID){
 
      if (parentViewID < 0 ){
-        cout << "no parent. must be a window. returning." << std::endl;
+        //cout << "no parent. must be a window. returning." << "\n";
         return;
 
     }
@@ -407,7 +408,7 @@ void UIView::setSize(int sizeX, int sizeY){
 
     viewRect.size.width = sizeX;
     viewRect.size.height = sizeY;
-    cout << "size changed to " << viewRect.size.width << " x " << viewRect.size.height << endl;
+    //cout << "size changed to " << viewRect.size.width << " x " << viewRect.size.height << "\n";
     resolveSize();
 
 }
@@ -416,7 +417,7 @@ void UIView::offsetSize(int sizeX, int sizeY){
 
     viewRect.size.width += sizeX;
     viewRect.size.height += sizeY;
-    cout << "size offset to " << viewRect.size.width << " x " << viewRect.size.height << endl;
+   // cout << "size offset to " << viewRect.size.width << " x " << viewRect.size.height << "\n";
 
 }
 

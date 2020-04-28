@@ -34,7 +34,7 @@ void UIViewPort::offsetGlobalPosition(float posX, float posY)
 {
     globalRect.point.x += posX;
     globalRect.point.y += posY;
-    cout << "global rect moved is " << globalRect.point.x << endl;
+    //cout << "global rect moved is " << globalRect.point.x << endl;
 
 }
 
@@ -66,7 +66,7 @@ void UIViewPort::Draw()
 //dont scale drawing of select pass as mouse pos is given in pixel coords from retina window so just draw small and read from that.
 void UIViewPort::DrawSelectPass()
 {
-    cout << "in VP DrawSelectPass" << endl;
+    //cout << "in VP DrawSelectPass" << endl;
     glViewport(globalRect.point.x*rootWindow->scaleFactor, globalRect.point.y*rootWindow->scaleFactor,viewRect.size.width*rootWindow->scaleFactor,viewRect.size.height*rootWindow->scaleFactor);
     //cout << "set viewportx to " << globalRect.point.x << "with size " << viewRect.size.width << endl;
     glMatrixMode(GL_PROJECTION);

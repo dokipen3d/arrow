@@ -99,8 +99,8 @@ void UIWindow::DrawGui() {
   // cout << "got here" << endl;
   // glTranslatef(0.0, 0.0, -1);
 
-  textEngine->render_text("The quick brown fox jumps",  0, 200, 1.0f, 1.0f);
-   textEngine->render_text("Yep sure is",  200.0f, 500.0f, 1.0f, 1.0f);
+  //textEngine->render_text("The quick brown fox jumps",  0, 200, 1.0f, 1.0f);
+  // textEngine->render_text("Yep sure is",  200.0f, 500.0f, 1.0f, 1.0f);
 
 }
 
@@ -139,10 +139,10 @@ void UIWindow::InitGL(const char *name) {
   // mainCore = mainAppCore;
 
   // 800 x 600, 16 bit color, no depth, alpha or stencil buffers, windowed
- // glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 2 );
- // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-  // glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE );
-  // glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
+  glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 2 );
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+  //glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE );
+   //glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
 
   // glfwOpenWindowHint ( GLFW_REFRESH_RATE, 60);
   cout << "setting glfw swap" << std::endl;
