@@ -282,7 +282,8 @@ atlas* TextEngine::get48Atlas()
 
 void TextEngine::render_text(const char *text, float x, float y, float sx, float sy)
 {
-
+    // for resetting when we go to new line
+    float origX = x;
     //checkGLError();
     const uint8_t *p;
 
@@ -355,7 +356,14 @@ void TextEngine::render_text(const char *text, float x, float y, float sx, float
 
         x += a->c[*p].ax * sx;
         //y += a->c[*p].ay * sy;
-        y += 0.0;
+        constexpr char escape = 0x0a;
+        constexpr unsigned char n = 'n';
+
+        if(*p == escape){
+            x = origX;
+            y += 14.1;
+            //p++;
+        }
 
 
         if(!w || !h)

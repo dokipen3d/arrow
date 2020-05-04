@@ -382,32 +382,26 @@ void UIWindow::handleEvent(keyStoreStruct key) {
 }
 
 int UIWindow::nodeIDUnderMousePos(keyStoreStruct key) {
-  // resetViewport();
   glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  // glfwGetMousePos( &Mouse.Mx, &Mouse.My );
   DrawSelectPass();
 
-  unsigned char *pRGB;
-
-  pRGB = new unsigned char[4];
+  unsigned char pRGB[4];
 
   glReadPixels(key.Mx * scaleFactor,
                (viewRect.size.height - key.My) * scaleFactor, 1, 1, GL_RGBA,
                GL_UNSIGNED_BYTE, pRGB);
-  cout << "passed mouse value is " << key.Mx << endl;
 
   int id = (pRGB[0]) + (pRGB[1] * 256) + (pRGB[2] * 256 * 256);
   if (!(id == 0)) {
     // int nodeID = vUIViewGlobalStore.at(id-1)->getPointedToNodeID();
     // viewController->setCurrentSelectedNode(nodeID);
     printf("selected view is id %d\n", id);
-
-  } else
+  } else {
     printf("selected background with id of %d\n", id);
+  }
 
-  delete (pRGB);
   glClearColor(0.5, 0.5, 0.5, 1.0);
   return id;
 }

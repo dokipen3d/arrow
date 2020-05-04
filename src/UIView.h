@@ -66,6 +66,8 @@ class UIView {
         virtual void viewClicked(keyStoreStruct key, int senderID);//default just calls parent viewClicked. if parent == NULL then do nothinng.
         virtual void viewDragged(keyStoreStruct key, int senderID);
         virtual void viewReleased(keyStoreStruct key, int senderID);
+        virtual void resolveSize();//to notify children of parent resizing.
+
         //void setRoot(GLGui *root); //done in constructor
         void movePosition(float moveX, float moveY);
         void setPosition(float setX, float setY);
@@ -83,7 +85,6 @@ class UIView {
 
 
         //bool stopWorldPosSearch;//for VPts to know when they don't need to search any more higher.
-        virtual void resolveSize();//to notify children of parent resizing.
 
         UIRect globalRect;
         UIRect viewRect;

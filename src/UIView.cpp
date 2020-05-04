@@ -186,7 +186,7 @@ void UIView::Draw(){
             glVertex3f(viewRect.point.x, viewRect.point.y + viewRect.size.height, 1.0);
 
         glEnd();
-        rootWindow->textEngine->render_text("view", 0.0, 0.0, 1.0, 1.0);
+        rootWindow->textEngine->render_text("view is the\n best", 0.0, 0.0, 1.0, 1.0);
 
         }
 
