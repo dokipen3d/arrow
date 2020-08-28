@@ -9,8 +9,9 @@ An OpenGL based cross platform GUI framework.
 > .\vcpkg\bootstrap-vcpkg.bat
 
 > .\vcpkg\vcpkg install freetype
-./vcpkg.exe install freetype:x64-windows (i had to do this on my machine otherwisw it wasn't found)
-
+> ./vcpkg.exe install freetype:x64-windows (i had to do this on my machine otherwisw it wasn't found)
+> ./vcpkg.exe install glfw3:x64-windows
+> ./vcpkg.exe install glew:x64-windows
 .\vcpkg\vcpkg integrate install
 
 create a build folder
