@@ -30,4 +30,6 @@ run 'cmake --build .' (or on windows ''cmake --build . --config Release')
 
 On windows the executable will be '.\Debug\cpplox.exe' if you have built debug or '.\Release\cpplox.exe' for release
 
+Then make sure to copy the font files and the textShader frag/vert to the exe dir and run it from there.
+
 
