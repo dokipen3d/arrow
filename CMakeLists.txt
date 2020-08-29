@@ -19,10 +19,12 @@ include_directories(${GLFW_INCLUDE_DIRS})
 aux_source_directory(src/ SRC_LIST)
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 14)
+
+
 target_link_libraries(${PROJECT_NAME} 
                       PRIVATE 
                       Freetype::Freetype 
                       glfw
-                      glm
                       GLEW::GLEW 
                       ${OPENGL_LIBRARIES})
