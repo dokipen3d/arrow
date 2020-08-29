@@ -26,6 +26,7 @@ int main( int argc, char* argv[] )
 
     //UIViewController *viewController = new UIViewController;
     auto viewController = make_unique<UIViewController>();
+    viewController->exec();
     //mainCore->appLoop();
     //delete viewController;
 

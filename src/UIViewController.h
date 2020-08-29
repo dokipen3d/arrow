@@ -10,17 +10,25 @@
 //class AppCore;
 //class GLGui;
 
+// owns windows and connects app logic to ui
+
 class UIViewController{
 
 
 private:
 
-
+    //window backend
     GLGui *appGui;
+
+    // application always has at least one window
     UIWindow *mainWindow;
+    std::vector<UIWindow*> windows;
+
+    //this is just our test program. user programs would probably have this at a higher level, alongside
+    // the application
     AppCore *appCore;
 
-
+    bool bProgramRunning = false;
 
 
 public:
@@ -35,8 +43,9 @@ public:
     void callUINodeDraw();
     void callNodeDrawSelect();
     void setCurrentSelectedNode(int id);
-    void appLoop();                    //enter main loop. might swap this out for a app loop object
+    void exec();                    //enter main loop. might swap this out for a app loop object. rename to exec like qt?
     Node* createNode();
+    void quit();
 
     void connectEventToWindow();
     void processEvents();//get keySTore from GLGui and do something with it

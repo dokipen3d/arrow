@@ -45,6 +45,8 @@ public:
 
     static keyStoreStruct keyStore;
     static UIRect windowRect;
+
+    // a flag to make sure we only resize one call at a time.
     static bool windowResized;
     void DrawGui();
     void CloseGUI(int return_code);

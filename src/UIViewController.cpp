@@ -1,12 +1,10 @@
 #include "UIViewController.h"
 #include <iostream>
 
-
 using namespace std;
 
-
-
-UIViewController::UIViewController(){
+UIViewController::UIViewController()
+{
 
     appCore = new AppCore;
     appCore->setViewController(this);
@@ -14,28 +12,35 @@ UIViewController::UIViewController(){
     appGui = new GLGui;
     appGui->setViewController(this);
 
-
     appCore->setViewController(this);
 
-    mainWindow = new UIWindow(NULL, 1024, 576 ); //set windows to be 0 as it is stored by itself at index 0.
+    mainWindow = new UIWindow(NULL, 1024, 576); //set windows to be 0 as it is stored by itself at index 0.
+    
+    // for now as we start this refactor, put the main window into the vec
+    windows.push_back(mainWindow);
+    
     //register self
-    mainWindow->registerView(mainWindow, (UIView*)this);
+    mainWindow->registerView(mainWindow, (UIView *)this);
     mainWindow->setViewController(this);
     //mainWindow->setHandler(appGui);
-    cout << "about to run UIController appgui init" <<std::endl;
+    cout << "about to run UIController appgui init" << std::endl;
     mainWindow->InitGL("arrowtest");
-    cout << "ran UIController appgui init" <<std::endl;
+    cout << "ran UIController appgui init" << std::endl;
 
     appGui->addWindow(mainWindow);
-
-    cout << "Initialised. about to run UIController apploop" <<std::endl;
-    appLoop();
+    bProgramRunning = true;
 
 
-
+    cout << "Initialised. about to run UIController apploop" << std::endl;
 }
 
-UIViewController::~UIViewController(){
+void UIViewController::quit(){
+
+    bProgramRunning = false;
+}
+
+UIViewController::~UIViewController()
+{
 
     delete appCore;
     delete appGui;
@@ -45,84 +50,77 @@ UIViewController::~UIViewController(){
     delete mainWindow;
 }
 
-Node* UIViewController::createNode(){
+Node *UIViewController::createNode()
+{
 
     cout << "in UIVc createNode" << std::endl;
     Node *nodePointer = appCore->createNode();
     return nodePointer;
-
 }
 
-void UIViewController::connectNodes(int outputNode_id, int inputNode_id, int fromPlugID, int toPlugID ){ //connect two nodes specifying which nodes and which inputs....
+void UIViewController::connectNodes(int outputNode_id, int inputNode_id, int fromPlugID, int toPlugID)
+{ //connect two nodes specifying which nodes and which inputs....
 
-    appCore->connectNodes(outputNode_id,inputNode_id,fromPlugID , toPlugID );
-
+    appCore->connectNodes(outputNode_id, inputNode_id, fromPlugID, toPlugID);
 }
 
-void UIViewController::appLoop() {
-
-    mainWindow->GLLoop();
-
+void UIViewController::exec()
+{
+    while (bProgramRunning)
+    {
+        for (auto& window : windows){
+            processEvents();
+            window->DrawGui();
+            glfwSwapBuffers(window->getWindow());
+            glfwWaitEvents();
+        }
+    }
 }
 
-
-void UIViewController::callUINodeDraw(){
+void UIViewController::callUINodeDraw()
+{
 
     //cout << "calling node draw" << std::endl;
-   appCore->callNodeDraw();
-
+    appCore->callNodeDraw();
 }
 
-
-void UIViewController::callNodeDrawSelect(){
+void UIViewController::callNodeDrawSelect()
+{
 
     appCore->callNodeDrawSelect();
-
-
 }
 
-void UIViewController::setCurrentSelectedNode(int id){
+void UIViewController::setCurrentSelectedNode(int id)
+{
 
     appCore->setCurrentSelectedNode(id);
 }
 
-
-
-void UIViewController::setAppCore(AppCore *appC){
-
+void UIViewController::setAppCore(AppCore *appC)
+{
 
     appCore = appC;
-
-
-
 }
 
-void UIViewController::setGui(GLGui *gui){
+void UIViewController::setGui(GLGui *gui)
+{
 
     appGui = gui;
-
 }
 
-void UIViewController::processEvents(){
-
+void UIViewController::processEvents()
+{
     appGui->processEvents();
-
 }
 
-void UIViewController::setCallBacks(){
+void UIViewController::setCallBacks()
+{
 
     appGui->setCallBacks(mainWindow->getWindow());
-
-
 }
 
-void UIViewController::closeGUI(){
+void UIViewController::closeGUI()
+{
 
     appGui->CloseGUI(1);
-
 }
-
-
-
-
-

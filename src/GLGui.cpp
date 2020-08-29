@@ -54,9 +54,9 @@ void GLGui::processEvents(){//called in main loop and forwards events to windows
     //if multiple windows then iterate through window refrences and send them. one window for now.
     eventWindow->handleEvent(keyStore);
 
-    //cout  << "calling eventWindow handler" << endl;
     if (windowResized == true)
     {
+        std::cout << "boo\n";
         eventWindow->setSize(windowRect.size.width, windowRect.size.height);
         windowResized = false;
     }
