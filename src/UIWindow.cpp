@@ -395,7 +395,10 @@ int UIWindow::nodeIDUnderMousePos(keyStoreStruct key) {
   glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  cout << "drawing select \n";
+
   DrawSelectPass();
+  cout << "drew select \n";
 
   unsigned char pRGB[4];
 

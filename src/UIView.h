@@ -23,13 +23,15 @@ class UIView {
 
     protected:
 
+
+       //the id of this views parent. We can ask the main window to give it to us
+        int parentViewID;
+        UIView* parent; // needs to be before rootWindow so that constructor can test it against self
         //store a pointer to main window. We dont own it so its a raw pointer
         //only need to refer to it.
         UIWindow *rootWindow;
 
-        //the id of this views parent. We can ask the main window to give it to us
-        int parentViewID;
-        UIView* parent;
+ 
 
         //store indexes to children.
         //only store indexes because I only want ONE place to store the actuall addresses of all the views

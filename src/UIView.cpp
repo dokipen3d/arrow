@@ -21,18 +21,23 @@ using namespace std;
 // 3. in the else, we create a UIWindow which calls its constructor which in turn calls UIView(this) as parent
 // 4. this will cause the UIWindow->UIView constructor to go into the if(parent) branch. here we should check if parent is == this!
 UIView::UIView(UIView *parent, int width, int height)
-    : rootWindow([&]() {
-        UIWindow *root = nullptr; 
-        if(parent->isRootWindow()){ //this means the UIWindow was created manually so set to self
-            root = static_cast<UIWindow*>(parent);
-        } else if(parent){  //standard way of parenting views, can just steal the root from the parent
-            root = parent->rootWindow; 
+    : parent(parent), rootWindow([&]() -> UIWindow * {
+        UIWindow *root = nullptr;
+        if (parent->isRootWindow()) { // this means the UIWindow was created
+                                      // manually so set to self
+          cout << "in uiview construct of UIWindow! setting root to self\n";
+          root = static_cast<UIWindow *>(parent);
+        } else if (parent) { // standard way of parenting views, can just steal
+                             // the root from the parent
+          cout << "in uiview construct of something else! setting root to "
+                  "parent root\n";
+          root = parent->rootWindow;
         } else {
-            root = new UIWindow(width, height);
+          cout << "no parent. is an orphan, setting up a window!\n";
+          root = new UIWindow(width, height);
         }
         return root;
-      }()),
-      parent(parent) {
+      }()) {
 
   globalIndexID = NULL;
 
@@ -159,7 +164,10 @@ void UIView::Init(){//do extra stuff
 
     //call parent and inc viewCount and set local id
     if (globalIndexID != 0){ //  if this UIview is not the root window
-        //UIView* parent = rootWindow->getNodeFromID(parentViewID);
+        if(!rootWindow){
+            cout << "root null\n";
+        }
+        UIView* parent = rootWindow->getNodeFromID(parentViewID);
         cout << "parent ID of node " << globalIndexID << " is" << parentViewID << "\n";
 
         localID = parent->viewCount;
@@ -184,6 +192,7 @@ void UIView::Init(){//do extra stuff
 
 void UIView::Draw(){
 
+    cout << "drawing " << globalIndexID << "\n";
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
     //cout << "Drawing node " << globalIndexID << endl;
@@ -218,10 +227,13 @@ void UIView::DrawSubViews(){
 
 
 
-    for (viewIndexIterator = UIViewIndexStore.begin() ; viewIndexIterator < UIViewIndexStore.end(); viewIndexIterator++){
+    for (auto it = UIViewIndexStore.begin() ; it < UIViewIndexStore.end(); ++it){
 
-            //cout << "in vertex index iterator. fist node id is " << *viewIndexIterator << endl;
-			rootWindow->getNodeFromID((*viewIndexIterator))->Draw();
+            //cout << "in vertex index iterator. fist node id is " << *it << endl;
+            // if(!rootWindow){
+            //     cout << "root null!\n";
+            // }
+			rootWindow->getNodeFromID((*it))->Draw();
         }
 
 
@@ -245,7 +257,9 @@ void UIView::DrawSelectPass(){
     glEnd();
 
     if (viewCount > 0)
-    {
+    {   
+        cout << "sub views!\n ";
+
         DrawSelectPassSubViews();
     }
 
@@ -306,10 +320,16 @@ void UIView::DrawSelectPassSubViews()
 {
     //cout << "viewCOunt is " << viewCount << "\n";
     //cout << "vector size is " << UIViewIndexStore.size() << "\n";
-    for (viewIndexIterator = UIViewIndexStore.begin() ; viewIndexIterator < UIViewIndexStore.end(); viewIndexIterator++){
-
+    for (auto it = UIViewIndexStore.begin() ; it < UIViewIndexStore.end(); ++it){
+            cout << "in it. getting node from id " << *it <<"\n";
+            if(!rootWindow){
+                cout << "root is null!\n ";
+            }
+            if(isRootWindow()){
+                cout << "im a root!\n ";
+            }
             //cout << "in vertex index iterator of node ID " << globalIndexID <<  " next node id is " << *viewIndexIterator << "\n";
-			rootWindow->getNodeFromID(*viewIndexIterator)->DrawSelectPass();
+			rootWindow->getNodeFromID(*it)->DrawSelectPass();
 			//cout << "drew pass" << "\n";
     }
 
@@ -351,6 +371,7 @@ UIRect UIView::getRect(){
 
 void UIView::viewClicked(keyStoreStruct key, int senderID){//default just calls parent viewClicked. if parent == NULL then do nothinng.
 
+    cout << "clicked else " << globalIndexID << "\n";
 
     //cout << "view clicked called in node " << globalIndexID << "\n";
     //cout << "parentID is " << parentViewID << "\n";
@@ -362,7 +383,7 @@ void UIView::viewClicked(keyStoreStruct key, int senderID){//default just calls 
     }
 
     else{
-
+        cout << "clicked else " << globalIndexID << "\n";
         //calls mainwindow and asks for a pointer to the node which is out parent
         rootWindow->getNodeFromID(parentViewID)->viewClicked(key,localID );
 
