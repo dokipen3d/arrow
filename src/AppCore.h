@@ -10,11 +10,10 @@
 #include <vector>
 #include "Node.h"
 #include "NodeTypes.h"
-//#include "UIViewController.h"
 
 using namespace std;
 
-class UIViewController; //forward declaration to make sure that we are aware of appcore. since appcore contiains the glgui header, the header wont get included.
+class Application; //forward declaration to make sure that we are aware of appcore. since appcore contiains the glgui header, the header wont get included.
 
 
 
@@ -36,7 +35,7 @@ public:
     void prepareQueue();              //call nodes to recursively queue up the queue ready for computing.
     void callNodeDraw();//call all the nodes to draw themselves.
 	void callNodeDrawSelect();//draw all nodes with id colors to backbuffer
-    void setViewController(UIViewController *controller); // can dynamically change viewController so we can have different behaviour at runtime
+    void setViewController(Application *controller); // can dynamically change viewController so we can have different behaviour at runtime
 
 
 private:
@@ -53,8 +52,7 @@ private:
     void renderCurrentQueue();             //render currently line up queue
 	bool treeChanged;				//to keep track of wether the tree has been rearranged with nodes being disconnected and if we need to rebuild the queue.
 
-	//GLGui *GUI;
-	UIViewController *viewController;
+	Application *viewController;
 
 
 

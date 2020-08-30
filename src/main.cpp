@@ -4,7 +4,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include "UIViewController.h"
+#include "Application.h"
 
 //#define GLEW_STATIC
 #include <GL/glew.h>
@@ -24,9 +24,8 @@ int main( int argc, char* argv[] )
 
 
 
-    //UIViewController *viewController = new UIViewController;
-    auto viewController = make_unique<UIViewController>();
-    viewController->exec();
+    auto application = make_unique<Application>();
+    application->exec();
     //mainCore->appLoop();
     //delete viewController;
 

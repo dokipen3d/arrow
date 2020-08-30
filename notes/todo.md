@@ -1,4 +1,12 @@
+ 1) move init GL to GLFWGUI and somehow forward width/height
+ 2) remove all viewController from window. (will now access using static methods)
+ 
  - add override to vpcontroller (and final?)
+ - if UIView doesn't have a parent, then it should create it's own internal window member, somehow add it to the application (static method) and embed iself in the window. If we then reparent the UIView by adding it to another UIView (layout/viewportcontroller or another window) then we 
+ - drawGUI needs to return a bool bNeedsUpdate to say if anything acually was redrawn (if drags changed the layout, or selection caused a highlight).
+ - if something needs to update from the app itself, do we just swap directly or do we post an empty event?
+ - GLFWGui needs to take a pointer to the structure that store the keys/actions. that way it doesn't need to store the Application
+ - rename keyStore to inputInfo and windowRect to windowInfo?
 - rename apploop in application to exec?
  - window currently handles events, but we should abstract the button presses to be api agnostic. 
  - add a vector of UI rects to draw to the UI window. Instead of glbegin/glend, write into the vector and draw all at once. this will allow us to update only the existing views needed (as long as none are being added/removed). Also we can then map memory for opengl.
@@ -20,12 +28,11 @@
 - glgui only deals with glfw specific stuff. we need a separate renderer that actually does gl stuff. GLRenderer, vulkan renderer etc. this is owned by application/controller too. it just knows how to get the rects/geo from the window. maybe with sfml, these can be one object? ie inherit from both as it is both the windowing lib and the renderer (if we want to use that too instead of raw gl)
 - why is the windowResized needed in processEvents?
 - processEvents should come out of glfwgui. instead, the callbacks should set the keystoreinfo in the appcontroller. then the controller can call handle events on the windows directly without the glfwgui needing to know about uiwindows
-
-
-
-1) move loop to application
-2) remove from window
-
+- when we create a window, we should either pass in the application in the constructor or have it a global thing we can access. pass in nullptr as the UIView (sender, currently its wrong!).
+- main window can register itself upon construction
+- change registerView to addView. also have it return the pointer so we can call make_shared in the function itself. so auto view = window->addView(make_shared)
+- make a pure virtual interface for the windower backend (GLFWGUI)
+- also a pure virtual interface for the renderer
 
  separation plan
  - controller has a vector of window handle/id to UIWindows

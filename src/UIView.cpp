@@ -1,5 +1,6 @@
 #include "UIView.h"
 #include "UIWindow.h"
+#include "Application.h"
 #include <stdio.h>
 #include <iostream>
 #include <algorithm>
@@ -11,43 +12,47 @@
 //each view stores a refernce to the main window it is in
 
 using namespace std;
+// TODO here we need to check if parent is null, and if it is, then create a
+// uiwindow to embed ourselves in and register the window with the application
+UIView::UIView(UIView *parent, int width, int height)
+    : rootWindow([&]() {
+        UIWindow *root = nullptr; 
+        if(parent){
+            root = parent->rootWindow; 
+        } else {
+            root = new UIWindow(width, height);
+            Application::addWindow(root);
+        }
+        return root;
+      }()),
+      parent(parent) {
 
+  globalIndexID = NULL;
 
-UIView::UIView(UIWindow *root, int width, int height){
+  // initialize to 0 for non VP type UIViews so that world pos is gettable
+  // without local pos affecting it.
+  globalRect.size.width = 0.0;
+  globalRect.size.height = 0.0;
+  globalRect.point.x = 0.0;
+  globalRect.point.y = 0.0;
+  // stopWorldPosSearch = false;
 
-    //cout << "UIVIew Constructor" << endl;
-    globalIndexID = NULL;
+  // if(parent){
+  //     rootWindow = parent->rootWindow;
+  // }
 
-    //initialize to 0 for non VP type UIViews so that world pos is gettable without local pos affecting it.
-    globalRect.size.width = 0.0;
-    globalRect.size.height = 0.0;
-    globalRect.point.x = 0.0;
-    globalRect.point.y = 0.0;
-    //stopWorldPosSearch = false;
+  viewRect.point.x = 0.0;
+  viewRect.point.y = 0.0;
+  viewRect.size.width = (float)width;
+  // cout << "assigning width as " << viewRect.size.width << std::endl;
+  viewRect.size.height = (float)height;
+  viewCount = 0;
 
+  // store pointer to parent, get local ID from parent's viewcount and then
+  // increment parent's viewCount
 
-    if (root !=NULL){
-        rootWindow = root;
-
-    }
-    else{
-        root = NULL;
-        cout << "no window assigned" << "\n";
-    }
-
-    viewRect.point.x = 0.0;
-    viewRect.point.y = 0.0;
-    viewRect.size.width = (float)width;
-    //cout << "assigning width as " << viewRect.size.width << std::endl;
-    viewRect.size.height = (float)height;
-    viewCount = 0;
-
-    //store pointer to parent, get local ID from parent's viewcount and then increment parent's viewCount
-
-
-
-    //cout << "in UIView about to get init" << endl;
-    //Init();
+  // cout << "in UIView about to get init" << endl;
+  // Init();
 }
 
 UIView::~UIView(){
@@ -101,11 +106,9 @@ void UIView::setParentID(int parentID)
 
 void UIView::resolveSize()
 {
-    for (viewIndexIterator = UIViewIndexStore.begin() ; viewIndexIterator < UIViewIndexStore.end(); viewIndexIterator++)
-    {
-        rootWindow->getNodeFromID(*viewIndexIterator)->resolveSize();
+    for(auto& index : UIViewIndexStore){
+        rootWindow->getNodeFromID(index)->resolveSize();
     }
-
 }
 
 void UIView::addSubView(UIView* newView)

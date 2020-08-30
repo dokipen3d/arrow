@@ -1,43 +1,41 @@
-#ifndef UIVIEWCONTROLLER_H
-#define UIVIEWCONTROLLER_H
+#pragma once
 
 
 #include "GLGui.h"
-//#include "SFMLHandler.h"
+#include <memory>
 #include "AppCore.h"
 #include "UIWindow.h"
 
-//class AppCore;
-//class GLGui;
-
 // owns windows and connects app logic to ui
 
-class UIViewController{
+class Application{
 
 
 private:
 
     //window backend
-    GLGui *appGui;
+    std::unique_ptr<GLGui> appGui;
 
     // application always has at least one window
-    UIWindow *mainWindow;
-    std::vector<UIWindow*> windows;
+    static std::vector<UIWindow*> windows;
+    static UIWindow *mainWindow;
 
     //this is just our test program. user programs would probably have this at a higher level, alongside
     // the application
-    AppCore *appCore;
+    std::unique_ptr<AppCore> appCore;
 
     bool bProgramRunning = false;
 
 
 public:
 
-    UIViewController();
-    virtual ~UIViewController();
+    Application();
+    virtual ~Application();
 
-    void setGui(GLGui *gui);
-    void setAppCore(AppCore *appC);
+    static void addWindow(UIWindow* window);
+
+    void setGui(std::unique_ptr<GLGui> gui);
+    void setAppCore(std::unique_ptr<AppCore> appC);
 
     void connectNodes(int outputNode_id, int inputNode_id, int fromPlugID, int toPlugID );
     void callUINodeDraw();
@@ -55,13 +53,3 @@ public:
 
 };
 
-
-
-
-
-
-
-
-
-
-#endif

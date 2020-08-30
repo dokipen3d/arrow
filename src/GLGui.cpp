@@ -1,13 +1,11 @@
 #include "GLGui.h"
 #include <string.h>
 
-//#include <cstdlib>
 #include <stdio.h>
 #include <iostream>
 #include <algorithm>
 #include <cmath>
-#include "UIViewController.h"
-//#include "UIView.h"
+#include "Application.h"
 #include "Node.h"
 #include "UIWindow.h"
 
@@ -110,12 +108,6 @@ void GLGui::addWindow(UIWindow *window){
 void GLGui::CloseGUI(int return_code){
   glfwTerminate();
   exit(return_code);
-}
-
-void GLGui::setViewController(UIViewController *controller){
-
-viewController = controller;
-
 }
 
 void GLGui::setCallBacks(GLFWwindow *window){

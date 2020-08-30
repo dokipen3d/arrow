@@ -13,15 +13,10 @@
 #include <iostream>
 #include <string.h>
 #include <cstdlib>
-#include "UIViewController.h"
+#include "Application.h"
 
 
 using namespace std;
-//class UIViewController;
-
-
-
-
 
 AppCore::AppCore() {
 
@@ -63,7 +58,7 @@ void AppCore::callNodeDrawSelect(){//this will go because appcore doesnt recieve
 
 }
 
-void AppCore::setViewController(UIViewController *controller){
+void AppCore::setViewController(Application *controller){
 
 
 viewController = controller;

@@ -32,7 +32,7 @@ private:
 
 
 public:
-    UIViewPort(UIWindow *root, int width, int height):UIView(root, width, height) {}
+    UIViewPort(UIView *parent, int width, int height):UIView(parent, width, height) {}
     ~UIViewPort();
     void setZoomable(bool doIZoom);
     void setResizeable(bool doIResize);

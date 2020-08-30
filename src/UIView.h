@@ -29,6 +29,7 @@ class UIView {
 
         //the id of this views parent. We can ask the main window to give it to us
         int parentViewID;
+        UIView* parent;
 
         //store indexes to children.
         //only store indexes because I only want ONE place to store the actuall addresses of all the views
@@ -56,7 +57,7 @@ class UIView {
 
 
 
-        UIView(UIWindow *root, int width, int height);//HAVE to pass a root node that keeps track of this globally
+        UIView(UIView *parent, int width, int height);//HAVE to pass a root node that keeps track of this globally
         virtual ~UIView();
         virtual void Init();
         virtual void Draw();// make it virtual so that it will call the derived function even if we refer to the object as a UIView

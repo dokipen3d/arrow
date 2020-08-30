@@ -1,10 +1,21 @@
 #include "UIWindow.h"
 #include <iostream>
-#include "UIViewController.h"
+#include "Application.h"
 #include "UIViewPortController.h"
 #include "PlugTypes.h"
 
 using namespace std;
+
+UIWindow::UIWindow(int width, int height)
+    : UIView(this, width, height) // passing this will cause the UIView
+                                  // contructor to set itself as the root
+{
+
+  cout << "UIWindow Constructor" << endl;
+  globalViewCount = 0; // 0 is our windows so other views will be above that
+  setDrawable(false);
+  vUIViewGlobalStore.clear();
+}
 
 void UIWindow::Init()
 {
@@ -39,23 +50,7 @@ void UIWindow::Init()
   programRunning = true;
 }
 
-void UIWindow::GLLoop()
-{
 
-  cout << "in GLLoop" << std::endl;
-  while (programRunning)
-  {
-    //
-
-    viewController->processEvents();
-    DrawGui();
-    glfwSwapBuffers(window);
-    glfwWaitEvents();
-
-    // glfwPollEvents();
-  }
-  cout << "exiting loop" << endl;
-}
 
 void UIWindow::ForceRefresh()
 {
@@ -101,12 +96,12 @@ void UIWindow::DrawGui()
   // textEngine->render_text("Yep sure is",  200.0f, 500.0f, 1.0f, 1.0f);
 }
 
-void UIWindow::connectNodes(int outputNode_id, int inputNode_id, int fromPlugID,
-                            int toPlugID)
-{
-  viewController->connectNodes(outputNode_id, inputNode_id, fromPlugID,
-                               toPlugID);
-}
+// void UIWindow::connectNodes(int outputNode_id, int inputNode_id, int fromPlugID,
+//                             int toPlugID)
+// {
+//   viewController->connectNodes(outputNode_id, inputNode_id, fromPlugID,
+//                                toPlugID);
+// }
 
 UIWindow::~UIWindow()
 {
@@ -122,7 +117,7 @@ UIWindow::~UIWindow()
   //delete vpCntlr;
 }
 
-void UIWindow::setViewController(UIViewController *controller)
+void UIWindow::setViewController(Application *controller)
 {
 
   viewController = controller;

@@ -1,27 +1,17 @@
-#ifndef GLGUI_H
-#define GLGUI_H
+#pragma once
 
-
-
-#ifdef _WIN32
-#include <GL/glew.h>
-//#define GLEW_STATIC
-#include <GLFW/glfw3.h>
-#else
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#endif
+
 
 #include <string.h>
 #include <vector>
 #include "PlugTypes.h"
-//#include "UIViewController.h"
 
 #define GLFW_INCLUDE_GLU
 
 using namespace std;
 
-class UIViewController;
 class Node;
 class UIWindow;
 
@@ -32,7 +22,6 @@ class GLGui {
 
 private:
 
-    UIViewController *viewController;
     UIWindow *eventWindow;
     UIWindow *userPointerWindow;
 
@@ -55,7 +44,6 @@ public:
     //GUI view stuff........
 
     void connectNodes(int outputNode_id, int inputNode_id, int fromPlugID, int toPlugID );
-    void setViewController(UIViewController *controller); // can dynamically change viewController so we can have different behaviour at runtime
 
     static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
@@ -79,5 +67,3 @@ public:
 
 
 };
-
-#endif // GLGUI_H

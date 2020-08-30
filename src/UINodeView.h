@@ -1,5 +1,4 @@
-#ifndef UINODEUIEW_H
-#define UINODEVIEW_H
+#pragma once
 
 #include "UIView.h"
 
@@ -12,7 +11,7 @@ private:
 
 public:
 
-    UINodeView(UIWindow *root, int width, int height):UIView(root, width, height) {}
+    UINodeView(UIView *root, int width, int height): UIView(root, width, height) {}
     ~UINodeView();
 
 
@@ -23,9 +22,3 @@ public:
 
 
 };
-
-
-
-
-
-#endif

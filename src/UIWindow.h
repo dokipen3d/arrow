@@ -19,7 +19,7 @@
 using namespace std;
 
 // base class
-class UIViewController;
+class Application;
 class UIViewPortController;
 
 class UIWindow : public UIView {
@@ -42,7 +42,7 @@ private:
   int returnViewCount();
   int selectedViewID;
 
-  UIViewController *viewController;
+  Application *viewController;
   frustrumStruct frustrum;
 
   // store a pointer to the app viewport controller. we dont own it so its just a raw pointer
@@ -54,15 +54,7 @@ private:
   void checkOpenGLError();
 
 public:
-  UIWindow(UIWindow *root, int width, int height)
-      : UIView(root, width, height) {
-
-    cout << "UIWindow Constructor" << endl;
-    globalViewCount = 0; // 0 is our windows so other views will be above that
-    setDrawable(false);
-    vUIViewGlobalStore.clear();
-
-  }
+  UIWindow(int width, int height);
 
   ~UIWindow();
 
@@ -72,11 +64,10 @@ public:
   float scaleFactor;
 
   virtual void Init();
-  void GLLoop();
   void InitGL(const char *name);
   void DrawGui();
   void ForceRefresh();
-  void setViewController(UIViewController *controller); // can dynamically
+  void setViewController(Application *controller); // can dynamically
                                                         // change viewController
                                                         // so we can have
                                                         // different behaviour
@@ -90,9 +81,9 @@ public:
   UIView *getNodeFromID(int id);
 
   const char *guiName;
-  void connectNodes(int outputNode_id, int inputNode_id, int fromPlugID,
-                    int toPlugID); // connect two nodes specifying which nodes
-                                   // and which inputs....
+  // void connectNodes(int outputNode_id, int inputNode_id, int fromPlugID,
+  //                   int toPlugID); // connect two nodes specifying which nodes
+  //                                  // and which inputs....
 
   void handleEvent(keyStoreStruct key);
   void setHandler(GLGui *eventHandlerPassThrough);
