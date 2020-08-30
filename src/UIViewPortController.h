@@ -18,7 +18,7 @@ private:
     bool dragging;
     keyStoreStruct localKeyStore;
     orientation oriented;
-    float dividerWidth;
+    float dividerThickness;
     UIViewPort *viewLeft;
     UIViewPort *divider;
     UIViewPort *viewRight;
@@ -30,7 +30,7 @@ private:
 
 public:
     UIViewPortController(UIWindow *root, int width, int height, orientation orient):UIView(root, width, height) {
-         dividerWidth = 8.0;
+        dividerThickness = 8.0;
         oriented = orient;
         }
 

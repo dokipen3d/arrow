@@ -74,7 +74,7 @@ void UIViewPortController::divide(float divPC){
 
         if (divider == NULL)
         {
-            divider = new UIViewPort(rootWindow, dividerWidth, viewRect.size.height);
+            divider = new UIViewPort(rootWindow, dividerThickness, viewRect.size.height);
             rootWindow->registerView(divider, this);
         }
         resolveSize();
@@ -92,7 +92,7 @@ void UIViewPortController::divide(float divPC){
 
         if (divider == NULL)
         {
-            divider = new UIViewPort(rootWindow,viewRect.size.width , dividerWidth);
+            divider = new UIViewPort(rootWindow,viewRect.size.width , dividerThickness);
             rootWindow->registerView(divider, this);
         }
         resolveSize();
@@ -123,82 +123,138 @@ void UIViewPortController::resizeGlobalSubViewPorts()//for setting up sizes afte
     //grab global pos of VPCtlr
     UIPoint globalPosOfParentVPCtlr = getWorldPos();
     //cout << "global Pos of parent VPCTlr is " << globalPosOfParentVPCtlr.x << "\n";
+    float divPositionX = 0;
+    float divPositionY = 0;
+    float offsetSizeX = 0;
+    float offsetSizeY = 0;
+    float finalWidth = viewRect.size.width;
+    float finalDividerWidth = viewRect.size.width;
+    float finalHeight = viewRect.size.height;
+    float finalDividerHeight = viewRect.size.height;
 
+    // only override the needed variables to avoid having to call all functions in two branches
+    // in future, we should make this a templated function or if constexpr
     if (oriented == VERTICAL)
     {
-        divPosition = viewRect.size.width * (divPercentLocation);//floating point errors causing extra pixels?
-        offsetSize = divPosition+dividerWidth;
-        //iterate through sub views and resize. hopefully works for multiple divs but limit to 3 for now
-
-
-        if (UIViewIndexStore.size() == 1)//if its only one viewport....
-        {//set it's size to be the VPCtlr viewRect...remember keep VPCtlrs pos 0.0, 0.0....
-            viewLeft->setPosition(0.0, 0.0);
-            viewLeft->setSize(viewRect.size.width, viewRect.size.height);
-            viewLeft->setGlobalPosition(globalPosOfParentVPCtlr.x, globalPosOfParentVPCtlr.y);
-            viewLeft->resolveSize();
-
-        }
-
-        else if (UIViewIndexStore.size() == 3)
-        {
-            viewLeft->setColour(0.5, 0.0, 0.5, 1.0);
-            viewLeft->setPosition(0.0, 0.0);
-            viewLeft->setSize(divPosition, viewRect.size.height);
-            viewLeft->setGlobalPosition(globalPosOfParentVPCtlr.x, globalPosOfParentVPCtlr.y);
-            viewLeft->resolveSize();
-
-            divider->setColour(0.0, 0.5, 0.5, 1.0);
-            divider->setPosition(0.0, 0.0);
-            divider->setSize(dividerWidth, viewRect.size.height);
-            divider->setGlobalPosition(globalPosOfParentVPCtlr.x+divPosition, globalPosOfParentVPCtlr.y);
-
-            viewRight->setColour(0.5, 0.5, 0.0, 1.0);
-            viewRight->setPosition(0.0, 0.0);
-            viewRight->setSize(viewRect.size.width-offsetSize,viewRect.size.height);
-            viewRight->setGlobalPosition(globalPosOfParentVPCtlr.x+offsetSize, globalPosOfParentVPCtlr.y);
-            viewRight->resolveSize();
-        }
+        finalDividerWidth = dividerThickness;
+        divPositionX = viewRect.size.width * (divPercentLocation);
+        finalWidth = divPositionX;
+        offsetSizeX = divPositionX+dividerThickness;
+    } else if(oriented == HORIZONTAL){
+        finalDividerHeight = dividerThickness;
+        divPositionY = viewRect.size.height * (divPercentLocation);
+        finalHeight = divPositionY;
+        offsetSizeY = divPositionY+dividerThickness;
     }
 
-    else if (oriented == HORIZONTAL)
+    if (UIViewIndexStore.size() == 1)//if its only one viewport....
+    {//set it's size to be the VPCtlr viewRect...remember keep VPCtlrs pos 0.0, 0.0....
+        viewLeft->setPosition(0.0, 0.0);
+        viewLeft->setSize(viewRect.size.width, viewRect.size.height);
+        viewLeft->setGlobalPosition(globalPosOfParentVPCtlr.x, globalPosOfParentVPCtlr.y);
+        viewLeft->resolveSize();
+
+    } else if (UIViewIndexStore.size() == 3)
     {
-        divPosition = viewRect.size.height * (divPercentLocation);//floating point errors causing extra pixels?
-        offsetSize = divPosition+dividerWidth;
-        //iterate through sub views and resize. hopefully works for multiple divs but limit to 3 for now
+        viewLeft->setColour(0.5, 0.0, 0.5, 1.0);
+        viewLeft->setPosition(0.0, 0.0);
+        viewLeft->setSize(finalWidth,
+                          finalHeight);
+        viewLeft->setGlobalPosition(globalPosOfParentVPCtlr.x,
+                                    globalPosOfParentVPCtlr.y);
+        viewLeft->resolveSize();
 
+        divider->setColour(0.0, 0.5, 0.5, 1.0);
+        divider->setPosition(0.0, 0.0);
+        divider->setSize(finalDividerWidth, finalDividerHeight);
+        divider->setGlobalPosition(globalPosOfParentVPCtlr.x + divPositionX,
+                                   globalPosOfParentVPCtlr.y + divPositionY);
 
-        if (UIViewIndexStore.size() == 1)//if its only one viewport....
-        {//set it's size to be the VPCtlr viewRect...remember keep VPCtlrs pos 0.0, 0.0....
-            viewLeft->setPosition(0.0, 0.0);
-            viewLeft->setSize(viewRect.size.width, viewRect.size.height);
-            viewLeft->setGlobalPosition(globalPosOfParentVPCtlr.x, globalPosOfParentVPCtlr.y);
-            viewLeft->resolveSize();
-
-        }
-
-        else if (UIViewIndexStore.size() == 3)
-        {
-            viewLeft->setColour(0.5, 0.0, 0.5, 1.0);
-            viewLeft->setPosition(0.0, 0.0);
-            viewLeft->setSize(viewRect.size.width , divPosition);
-            viewLeft->setGlobalPosition(globalPosOfParentVPCtlr.x, globalPosOfParentVPCtlr.y);
-            viewLeft->resolveSize();
-
-            divider->setColour(0.0, 0.5, 0.5, 1.0);
-            divider->setPosition(0.0, 0.0);
-            divider->setSize(viewRect.size.width, dividerWidth);
-            divider->setGlobalPosition(globalPosOfParentVPCtlr.x, globalPosOfParentVPCtlr.y+divPosition);
-
-            viewRight->setColour(0.5, 0.5, 0.0, 1.0);
-            viewRight->setPosition(0.0, 0.0);
-            viewRight->setSize(viewRect.size.width, viewRect.size.height-offsetSize);
-            viewRight->setGlobalPosition(globalPosOfParentVPCtlr.x, globalPosOfParentVPCtlr.y+offsetSize);
-            viewRight->resolveSize();
-        }
-
-
+        viewRight->setColour(0.5, 0.5, 0.0, 1.0);
+        viewRight->setPosition(0.0, 0.0);
+        viewRight->setSize(viewRect.size.width - offsetSizeX,
+                           viewRect.size.height - offsetSizeY);
+        viewRight->setGlobalPosition(
+            globalPosOfParentVPCtlr.x + offsetSizeX,
+            globalPosOfParentVPCtlr.y + offsetSizeY);
+        viewRight->resolveSize();
     }
+
+    // if (oriented == VERTICAL)
+    // {
+    //     divPosition = viewRect.size.width * (divPercentLocation);//floating point errors causing extra pixels?
+    //     offsetSize = divPosition+dividerWidth;
+    //     //iterate through sub views and resize. hopefully works for multiple divs but limit to 3 for now
+
+
+    //     if (UIViewIndexStore.size() == 1)//if its only one viewport....
+    //     {//set it's size to be the VPCtlr viewRect...remember keep VPCtlrs pos 0.0, 0.0....
+    //         viewLeft->setPosition(0.0, 0.0);
+    //         viewLeft->setSize(viewRect.size.width, viewRect.size.height);
+    //         viewLeft->setGlobalPosition(globalPosOfParentVPCtlr.x, globalPosOfParentVPCtlr.y);
+    //         viewLeft->resolveSize();
+
+    //     }
+
+    //     else if (UIViewIndexStore.size() == 3)
+    //     {
+    //         viewLeft->setColour(0.5, 0.0, 0.5, 1.0);
+    //         viewLeft->setPosition(0.0, 0.0);
+    //         viewLeft->setSize(divPosition, viewRect.size.height);
+    //         viewLeft->setGlobalPosition(globalPosOfParentVPCtlr.x, globalPosOfParentVPCtlr.y);
+    //         viewLeft->resolveSize();
+
+    //         divider->setColour(0.0, 0.5, 0.5, 1.0);
+    //         divider->setPosition(0.0, 0.0);
+    //         divider->setSize(dividerWidth, viewRect.size.height);
+    //         divider->setGlobalPosition(globalPosOfParentVPCtlr.x+divPosition, globalPosOfParentVPCtlr.y);
+
+    //         viewRight->setColour(0.5, 0.5, 0.0, 1.0);
+    //         viewRight->setPosition(0.0, 0.0);
+    //         viewRight->setSize(viewRect.size.width-offsetSize,viewRect.size.height);
+    //         viewRight->setGlobalPosition(globalPosOfParentVPCtlr.x+offsetSize, globalPosOfParentVPCtlr.y);
+    //         viewRight->resolveSize();
+    //     }
+    // }
+
+    // else if (oriented == HORIZONTAL)
+    // {
+    //     divPosition = viewRect.size.height * (divPercentLocation);//floating point errors causing extra pixels?
+    //     offsetSize = divPosition+dividerWidth;
+    //     //iterate through sub views and resize. hopefully works for multiple divs but limit to 3 for now
+
+
+    //     if (UIViewIndexStore.size() == 1)//if its only one viewport....
+    //     {//set it's size to be the VPCtlr viewRect...remember keep VPCtlrs pos 0.0, 0.0....
+    //         viewLeft->setPosition(0.0, 0.0);
+    //         viewLeft->setSize(viewRect.size.width, viewRect.size.height);
+    //         viewLeft->setGlobalPosition(globalPosOfParentVPCtlr.x, globalPosOfParentVPCtlr.y);
+    //         viewLeft->resolveSize();
+
+    //     }
+
+    //     else if (UIViewIndexStore.size() == 3)
+    //     {
+    //         viewLeft->setColour(0.5, 0.0, 0.5, 1.0);
+    //         viewLeft->setPosition(0.0, 0.0);
+    //         viewLeft->setSize(viewRect.size.width , divPosition);
+    //         viewLeft->setGlobalPosition(globalPosOfParentVPCtlr.x, globalPosOfParentVPCtlr.y);
+    //         viewLeft->resolveSize();
+
+    //         divider->setColour(0.0, 0.5, 0.5, 1.0);
+    //         divider->setPosition(0.0, 0.0);
+    //         divider->setSize(viewRect.size.width, dividerWidth);
+    //         divider->setGlobalPosition(globalPosOfParentVPCtlr.x, globalPosOfParentVPCtlr.y+divPosition);
+
+    //         viewRight->setColour(0.5, 0.5, 0.0, 1.0);
+    //         viewRight->setPosition(0.0, 0.0);
+    //         viewRight->setSize(viewRect.size.width, viewRect.size.height-offsetSize);
+    //         viewRight->setGlobalPosition(globalPosOfParentVPCtlr.x, globalPosOfParentVPCtlr.y+offsetSize);
+    //         viewRight->resolveSize();
+    //     }
+
+
+    
 
     UIView::resolveSize();
     //stopWorldPosSearch = true;//so sub VPts can stop searching.
