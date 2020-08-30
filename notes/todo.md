@@ -1,5 +1,6 @@
  1) move init GL to GLFWGUI and somehow forward width/height
  2) remove all viewController from window. (will now access using static methods)
+ 3) look at UIView init(). replace the check for root window. sort out registering etc
  
  - add override to vpcontroller (and final?)
  - if UIView doesn't have a parent, then it should create it's own internal window member, somehow add it to the application (static method) and embed iself in the window. If we then reparent the UIView by adding it to another UIView (layout/viewportcontroller or another window) then we 

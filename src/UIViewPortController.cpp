@@ -24,12 +24,28 @@ UIViewPortController::~UIViewPortController(){
 }
 
 void UIViewPortController::Init(){
+    cout << "VPCNT init\n ";
 
     UIView::Init();
 
+
+    cout << "setting vp id\n ";
+
+
     //set up main viewport. there is one by default before dividing.
-    viewLeft = new UIViewPort(rootWindow, 0, 0);
+    viewLeft = new UIViewPort(this, 0, 0);
+        cout << "reg vp\n ";
+    if(viewLeft){
+            cout << "not null\n ";
+
+    }
+    if(!rootWindow){
+            cout << "null!\n ";
+
+    }
     rootWindow->registerView(viewLeft, this);
+    cout << "reg vp done\n ";
+
     divider = NULL;
     viewRight = NULL;//set this to null and only create if we divide.
     DIVIDED = false;

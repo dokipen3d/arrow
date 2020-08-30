@@ -83,6 +83,7 @@ class UIView {
         void addSubView(UIView* newView);
         void printID();
         void deRegisterChildren();
+        bool isRootWindow();
 
 
         //bool stopWorldPosSearch;//for VPts to know when they don't need to search any more higher.

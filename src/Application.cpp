@@ -21,6 +21,8 @@ Application::Application()
     // for now as we start this refactor, put the main window into the vec
 
     //register self
+    cout << "about to register mainWindow to self" << std::endl;
+
     mainWindow->registerView(mainWindow, (UIView*)this);
     mainWindow->setViewController(this);
     //mainWindow->setHandler(appGui);

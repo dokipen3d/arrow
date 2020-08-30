@@ -22,6 +22,20 @@ GLGui::GLGui(){
         CloseGUI(1);            }
     windowResized = false;
 
+    // glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+    // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    // glfwSwapInterval(1);
+    // glewExperimental = GL_TRUE; // so that glew can getStringi and retrieve pointers
+    // GLenum err = glewInit();
+    // if (err != GLEW_OK)
+    // {
+    //     // Problem: glewInit failed, something is seriously wrong.
+    //     cout << "glewInit failed, aborting." << endl;
+    // }
+    // // checkOpenGLError(); // still gets GL_INVALID_ENUM after glew though. can
+    // // safely ingore.
+    // glGetError(); // clear error
+
 }
 
 GLGui::~GLGui(){

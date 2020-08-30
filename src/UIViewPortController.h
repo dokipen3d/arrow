@@ -29,10 +29,12 @@ private:
     void resizeFromDivider(int offsetX, int offsetY);
 
 public:
-    UIViewPortController(UIWindow *root, int width, int height, orientation orient):UIView(root, width, height) {
-        dividerThickness = 8.0;
-        oriented = orient;
-        }
+  UIViewPortController(UIWindow *parent, int width, int height,
+                       orientation orient)
+      : UIView(parent, width, height) {
+    dividerThickness = 8.0;
+    oriented = orient;
+    }
 
     ~UIViewPortController();
 

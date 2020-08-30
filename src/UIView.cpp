@@ -14,14 +14,21 @@
 using namespace std;
 // TODO here we need to check if parent is null, and if it is, then create a
 // uiwindow to embed ourselves in and register the window with the application
+
+// heres what happens when we have a uiview by itself (like the qwidget example .show())
+// 1. in user app, we create an application (which has its own window for now, maybe we should disable that?)
+// 2. we create a uiview (like a button). it doesn't have a parent passed in so it goes to the else
+// 3. in the else, we create a UIWindow which calls its constructor which in turn calls UIView(this) as parent
+// 4. this will cause the UIWindow->UIView constructor to go into the if(parent) branch. here we should check if parent is == this!
 UIView::UIView(UIView *parent, int width, int height)
     : rootWindow([&]() {
         UIWindow *root = nullptr; 
-        if(parent){
+        if(parent->isRootWindow()){ //this means the UIWindow was created manually so set to self
+            root = static_cast<UIWindow*>(parent);
+        } else if(parent){  //standard way of parenting views, can just steal the root from the parent
             root = parent->rootWindow; 
         } else {
             root = new UIWindow(width, height);
-            Application::addWindow(root);
         }
         return root;
       }()),
@@ -53,6 +60,10 @@ UIView::UIView(UIView *parent, int width, int height)
 
   // cout << "in UIView about to get init" << endl;
   // Init();
+}
+
+bool UIView::isRootWindow(){
+    return parent == this;
 }
 
 UIView::~UIView(){
@@ -143,10 +154,12 @@ UIPoint UIView::getWorldPos()
 
 void UIView::Init(){//do extra stuff
     //cout << "view init" << std::endl;
+    cout << "GIID " << globalIndexID << "\n";
+    cout << "PAID " << parentViewID << "\n";
 
     //call parent and inc viewCount and set local id
     if (globalIndexID != 0){ //  if this UIview is not the root window
-        UIView* parent = rootWindow->getNodeFromID(parentViewID);
+        //UIView* parent = rootWindow->getNodeFromID(parentViewID);
         cout << "parent ID of node " << globalIndexID << " is" << parentViewID << "\n";
 
         localID = parent->viewCount;
