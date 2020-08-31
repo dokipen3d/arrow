@@ -34,6 +34,7 @@
 - change registerView to addView. also have it return the pointer so we can call make_shared in the function itself. so auto view = window->addView(make_shared)
 - make a pure virtual interface for the windower backend (GLFWGUI)
 - also a pure virtual interface for the renderer
+- make viewportcontroller a bit more like qsplitter with the ability to have multiple splits and chile widgets. will need to make splits 'redistribute' as you move one AND add the ability to hold a modifier key to hold other split handles.
 
  separation plan
  - controller has a vector of window handle/id to UIWindows

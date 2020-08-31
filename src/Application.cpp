@@ -1,6 +1,7 @@
 #include "Application.h"
 #include <iostream>
 #include <future>
+#include "sparestack.hpp"
 
 using namespace std;
 
@@ -19,6 +20,9 @@ Application::Application()
     appCore->setViewController(this);
 
     appGui = std::make_unique<GLGui>();
+
+    sparestack<int> ss;
+    ss.push(5);
 
     //mainWindow = new UIWindow(NULL, 1024, 576); //set windows to be 0 as it is stored by itself at index 0.
 

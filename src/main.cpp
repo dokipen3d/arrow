@@ -27,7 +27,7 @@ int main( int argc, char* argv[] )
 
     auto application = make_unique<Application>();
 
-    auto view = std::make_unique<UIView>(nullptr, 1024, 768);
+    auto view = std::make_unique<UIView>(nullptr, 1280, 768);
 
 
     application->exec();

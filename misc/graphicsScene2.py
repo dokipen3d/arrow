@@ -1,13 +1,13 @@
 
 import sys
-from PySide import QtGui, QtCore
-
+from PySide2.QtWidgets import QGraphicsScene
+from PySide2 import QtGui, QtCore
 #custom graphicsScene to overide items() for intersection highlighting. 
 #Mouse tracking needs to be enabled on the view with view.setMouseTracking(True)
 
-class dkGraphicsScene(QtGui.QGraphicsScene):
+class dkGraphicsScene(QGraphicsScene):
     def __init__(self, parent = None):
-        QtGui.QGraphicsScene.__init__(self,parent)
+        QGraphicsScene.__init__(self,parent)
 
         #store curve type for testing on intersection
         self.CurveType = type(Curve())
@@ -43,9 +43,9 @@ class dkGraphicsScene(QtGui.QGraphicsScene):
 
 
 
-class Curve(QtGui.QGraphicsItem):
+class Curve(QGraphicsItem):
     def __init__(self, parent = None):
-        QtGui.QGraphicsItem.__init__(self,parent)
+        QGraphicsItem.__init__(self,parent)
         self.path = QtGui.QPainterPath()
         #self.path.moveTo(20, 300)
         #self.path.lineTo(240, 30)
@@ -79,10 +79,10 @@ class Curve(QtGui.QGraphicsItem):
     def itemChange(self, change, value):
         if change == QtGui.QGraphicsItem.ItemSelectedHasChanged:
             if value == False:
-                print "deselcted"  
+                print("deselcted")  
                 self.pen = QtGui.QPen(QtGui.QPen(QtCore.Qt.black, 1, QtCore.Qt.SolidLine))
             if value == True:
-                print "selected"
+                print("selected")
                 self.pen = QtGui.QPen(QtGui.QPen(QtCore.Qt.white, 1, QtCore.Qt.SolidLine))
         return QtGui.QGraphicsItem.itemChange(self, change, value)
 
@@ -155,10 +155,10 @@ class Node(QtGui.QGraphicsItem):
     def itemChange(self, change, value):
         if change == QtGui.QGraphicsItem.ItemSelectedHasChanged:
             if value == False:
-                print "deselcted"  
+                print("deselcted")  
                 self.selectedColour =  QtGui.QColor(0,255,0)     
             if value == True:
-                print "selected"
+                print("selected")
                 self.selectedColour =  QtGui.QColor(255,0,0)   
 
         return QtGui.QGraphicsItem.itemChange(self, change, value)
