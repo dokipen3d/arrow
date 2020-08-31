@@ -339,7 +339,7 @@ void UIWindow::handleEvent(keyStoreStruct key) {
 
   if (key.key == GLFW_KEY_ESCAPE) {
     // programRunning = false;
-    viewController->quit();
+    Application::quit();
     return;
   }
   // Mouse buttons on their own......

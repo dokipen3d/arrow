@@ -11,8 +11,9 @@ using namespace std;
 std::vector<UIWindow*> Application::windows{};
 UIWindow* Application::mainWindow;
 std::unique_ptr<GLGui> Application::appGui;
+bool Application::bProgramRunning(true);
 
-Application::Application() 
+Application::Application()
 {
 
     appCore = std::make_unique<AppCore>();
@@ -35,7 +36,6 @@ Application::Application()
     //mainWindow->setViewController(this);
     //mainWindow->setHandler(appGui);
     
-    bProgramRunning = true;
 
     cout << "Initialised. about to run UIController apploop" << std::endl;
 }

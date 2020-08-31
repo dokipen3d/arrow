@@ -23,7 +23,7 @@ private:
     // the application
     std::unique_ptr<AppCore> appCore;
 
-    bool bProgramRunning = false;
+    static bool bProgramRunning;
 
 
 public:
@@ -44,7 +44,7 @@ public:
     void setCurrentSelectedNode(int id);
     void exec();                    //enter main loop. might swap this out for a app loop object. rename to exec like qt?
     Node* createNode();
-    void quit();
+    static void quit();
 
     void connectEventToWindow();
     void processEvents();//get keySTore from GLGui and do something with it
