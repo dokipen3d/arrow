@@ -4,8 +4,12 @@
 
 using namespace std;
 
-std::vector<UIWindow*> Application::windows{new UIWindow(1024, 576)};
-UIWindow* Application::mainWindow(Application::windows.front());
+// std::vector<UIWindow*> Application::windows{new UIWindow(1024, 576)};
+// UIWindow* Application::mainWindow(Application::windows.front());
+
+std::vector<UIWindow*> Application::windows{};
+UIWindow* Application::mainWindow;
+std::unique_ptr<GLGui> Application::appGui;
 
 Application::Application() 
 {
@@ -22,15 +26,11 @@ Application::Application()
 
     //register self
     cout << "about to register mainWindow to self" << std::endl;
-
-    mainWindow->registerView(mainWindow, (UIView*)this);
-    mainWindow->setViewController(this);
+    
+    //mainWindow->registerView(mainWindow, (UIView*)this);
+    //mainWindow->setViewController(this);
     //mainWindow->setHandler(appGui);
-    cout << "about to run UIController appgui init" << std::endl;
-    mainWindow->InitGL("arrowtest");
-    cout << "ran UIController appgui init" << std::endl;
-
-    appGui->addWindow(mainWindow);
+    
     bProgramRunning = true;
 
     cout << "Initialised. about to run UIController apploop" << std::endl;
@@ -38,6 +38,13 @@ Application::Application()
 
 void Application::addWindow(UIWindow* window){
     windows.push_back(window);
+    mainWindow = window;
+    cout << "about to run UIController appgui init" << std::endl;
+    mainWindow->InitGL("arrowtest");
+    setCallBacks(); // needs to be done after init gl
+    cout << "ran UIController appgui init" << std::endl;
+
+    appGui->addWindow(mainWindow);
 }
 
 
@@ -52,8 +59,8 @@ Application::~Application()
 
     //here is a bug!
     cout << "calling vc destructor" << endl;
-    mainWindow->deRegisterChildren();
-    delete mainWindow;
+    //mainWindow->deRegisterChildren();
+    //delete mainWindow;
 }
 
 Node *Application::createNode()

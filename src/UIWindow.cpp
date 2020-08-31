@@ -173,7 +173,7 @@ void UIWindow::InitGL(const char *name) {
   glGetError(); // clear error
 
   cout << "setting window name as " << name << std::endl;
-  viewController->setCallBacks();
+  //viewController->setCallBacks();
   glViewport(0.0, 0.0, fbRect.size.width, fbRect.size.height);
   // checkOpenGLError();
   // set the projection matrix to a normal frustum with a max depth of 50

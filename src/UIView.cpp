@@ -22,8 +22,9 @@ using namespace std;
 // 4. this will cause the UIWindow->UIView constructor to go into the if(parent) branch. here we should check if parent is == this!
 UIView::UIView(UIView *parent, int width, int height)
     : parent(parent), rootWindow([&]() -> UIWindow * {
+         cout << "in uiview lambda\n"; 
         UIWindow *root = nullptr;
-        if (parent->isRootWindow()) { // this means the UIWindow was created
+        if (parent && parent->isRootWindow()) { // this means the UIWindow was created
                                       // manually so set to self
           cout << "in uiview construct of UIWindow! setting root to self\n";
           root = static_cast<UIWindow *>(parent);
@@ -35,9 +36,13 @@ UIView::UIView(UIView *parent, int width, int height)
         } else {
           cout << "no parent. is an orphan, setting up a window!\n";
           root = new UIWindow(width, height);
+          root->registerView(root, (UIView*)this); // THIS WONT BE NEEDED, JUST TESTING ORPHANING
         }
         return root;
       }()) {
+
+    cout << "in uiview constructor\n";
+
 
   globalIndexID = NULL;
 

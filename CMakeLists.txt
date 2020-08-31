@@ -24,7 +24,7 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 14)
 
 target_link_libraries(${PROJECT_NAME} 
                       PRIVATE 
-                      Freetype::Freetype 
+                      Freetype 
                       glfw
                       GLEW::GLEW 
                       ${OPENGL_LIBRARIES})

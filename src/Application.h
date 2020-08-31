@@ -14,11 +14,10 @@ class Application{
 private:
 
     //window backend
-    std::unique_ptr<GLGui> appGui;
+    static std::unique_ptr<GLGui> appGui;
 
     // application always has at least one window
     static std::vector<UIWindow*> windows;
-    static UIWindow *mainWindow;
 
     //this is just our test program. user programs would probably have this at a higher level, alongside
     // the application
@@ -31,6 +30,8 @@ public:
 
     Application();
     virtual ~Application();
+
+    static UIWindow *mainWindow;
 
     static void addWindow(UIWindow* window);
 
@@ -47,7 +48,7 @@ public:
 
     void connectEventToWindow();
     void processEvents();//get keySTore from GLGui and do something with it
-    void setCallBacks();
+    static void setCallBacks();
     void closeGUI();
 
 
