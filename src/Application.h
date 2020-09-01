@@ -5,6 +5,7 @@
 #include <memory>
 #include "AppCore.h"
 #include "UIWindow.h"
+#include "sparestack.hpp"
 
 // owns windows and connects app logic to ui
 
@@ -18,7 +19,7 @@ private:
 
     // application always has at least one window
     static std::vector<UIWindow*> windows;
-
+    static sparestack<UIWindow*> windowstack;
     //this is just our test program. user programs would probably have this at a higher level, alongside
     // the application
     std::unique_ptr<AppCore> appCore;
@@ -31,9 +32,13 @@ public:
     Application();
     virtual ~Application();
 
+    // if this is closed, the app closes
     static UIWindow *mainWindow;
 
     static void addWindow(UIWindow* window);
+    static void createWindow(UIWindow* window);
+
+
 
     void setGui(std::unique_ptr<GLGui> gui);
     void setAppCore(std::unique_ptr<AppCore> appC);

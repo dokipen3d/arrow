@@ -42,7 +42,6 @@ private:
   int returnViewCount();
   int selectedViewID;
 
-  Application *viewController;
   frustrumStruct frustrum;
 
   // store a pointer to the app viewport controller. we dont own it so its just a raw pointer
@@ -67,11 +66,6 @@ public:
   void InitGL(const char *name);
   void DrawGui();
   void ForceRefresh();
-  void setViewController(Application *controller); // can dynamically
-                                                        // change viewController
-                                                        // so we can have
-                                                        // different behaviour
-                                                        // at runtime
 
   void registerView(
       UIView *newView,

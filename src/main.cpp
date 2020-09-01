@@ -32,7 +32,6 @@ int main( int argc, char* argv[] )
 
     application->exec();
     //mainCore->appLoop();
-    //delete viewController;
 
 
   return 0;

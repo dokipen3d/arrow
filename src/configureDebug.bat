@@ -1,0 +1,1 @@
+cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=C:/Users/dokipen/Documents/Projects/vcpkg/scripts/buildsystems/vcpkg.cmake

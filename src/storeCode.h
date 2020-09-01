@@ -310,7 +310,6 @@ void GLGui::DrawGui(){
 
         glMatrixMode( GL_MODELVIEW );
         glLoadIdentity();
-		//viewController->callUINodeDraw();
 
 		for (drawIterator = rootViews.begin() ; drawIterator < rootViews.end(); drawIterator++){
 
@@ -339,7 +338,6 @@ void GLGui::selectNodeAtMousePos(){
 		int id = (pRGB[ 0 ]) + (pRGB[ 1 ]*256) + (pRGB[ 2 ]*256*256);
 		if (!id == 0){
 			//int nodeID = vUIViewGlobalStore.at(id-1)->getPointedToNodeID();
-			//viewController->setCurrentSelectedNode(nodeID);
 
 		}
 		else printf("selected background with id of %d\n", id);

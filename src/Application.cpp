@@ -9,6 +9,8 @@ using namespace std;
 // UIWindow* Application::mainWindow(Application::windows.front());
 
 std::vector<UIWindow*> Application::windows{};
+sparestack<UIWindow*> Application::windowstack{};
+
 UIWindow* Application::mainWindow;
 std::unique_ptr<GLGui> Application::appGui;
 bool Application::bProgramRunning(true);
@@ -17,13 +19,8 @@ Application::Application()
 {
 
     appCore = std::make_unique<AppCore>();
-    ;
-    appCore->setViewController(this);
-
+    
     appGui = std::make_unique<GLGui>();
-
-    sparestack<int> ss;
-    ss.push(5);
 
     //mainWindow = new UIWindow(NULL, 1024, 576); //set windows to be 0 as it is stored by itself at index 0.
 
@@ -33,7 +30,6 @@ Application::Application()
     cout << "about to register mainWindow to self" << std::endl;
     
     //mainWindow->registerView(mainWindow, (UIView*)this);
-    //mainWindow->setViewController(this);
     //mainWindow->setHandler(appGui);
     
 
@@ -50,6 +46,7 @@ void Application::addWindow(UIWindow* window){
 
     appGui->addWindow(mainWindow);
 }
+
 
 
 void Application::quit()

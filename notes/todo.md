@@ -47,3 +47,10 @@ any glfwgui backend class NEEDS to
  - call app->setSize(int windowID, width, height);
  - call app->refresh(int windowID)
  - when buttons are pushed, call app->setKeyStore 
+
+
+
+
+ UIWindow, Application and GLFWGUI relationship
+ - GLFW events need to tell UIWindow to resize through Application 
+ - Application has a createWindow function that returns a UIWindow* (so that UIViews can create them). unique_ptr<UIwindow> in Application. This must call the glfwgui to create the GLFWwindow and there must be a window id (stored in UIWindow?) and also set in the user pointer! we store it in the UIWindow so that upon destruction, we can tell the application to delete the glfw window 

@@ -1,1 +1,0 @@
-cmake .. -DCMAKE_TOOLCHAIN_FILE=C:/Users/dokipen/Documents/Projects/vcpkg/scripts/buildsystems/vcpkg.cmake

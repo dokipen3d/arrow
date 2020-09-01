@@ -99,10 +99,7 @@ void UIWindow::DrawGui() {
 // void UIWindow::connectNodes(int outputNode_id, int inputNode_id, int
 // fromPlugID,
 //                             int toPlugID)
-// {
-//   viewController->connectNodes(outputNode_id, inputNode_id, fromPlugID,
-//                                toPlugID);
-// }
+
 
 UIWindow::~UIWindow() {
   cout << "in UIWindow destructor" << endl;
@@ -115,11 +112,6 @@ UIWindow::~UIWindow() {
     }
   }
   // delete vpCntlr;
-}
-
-void UIWindow::setViewController(Application *controller) {
-
-  viewController = controller;
 }
 
 void UIWindow::InitGL(const char *name) {
@@ -173,7 +165,6 @@ void UIWindow::InitGL(const char *name) {
   glGetError(); // clear error
 
   cout << "setting window name as " << name << std::endl;
-  //viewController->setCallBacks();
   glViewport(0.0, 0.0, fbRect.size.width, fbRect.size.height);
   // checkOpenGLError();
   // set the projection matrix to a normal frustum with a max depth of 50
@@ -408,8 +399,6 @@ int UIWindow::nodeIDUnderMousePos(keyStoreStruct key) {
 
   int id = (pRGB[0]) + (pRGB[1] * 256) + (pRGB[2] * 256 * 256);
   if (!(id == 0)) {
-    // int nodeID = vUIViewGlobalStore.at(id-1)->getPointedToNodeID();
-    // viewController->setCurrentSelectedNode(nodeID);
     printf("selected view is id %d\n", id);
   } else {
     printf("selected background with id of %d\n", id);
