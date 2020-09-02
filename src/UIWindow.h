@@ -1,20 +1,22 @@
-#ifndef UIWINDOW_H
-#define UIWINDOW_H
+#pragma once
+
+#include <memory>
 
 #include "UIView.h"
 //#include "UIViewPort.h"
-#include "PlugTypes.h"
 #include "GLGui.h"
+#include "PlugTypes.h"
 
-#include "TextEngine.h"
 #include "ShaderObject.h"
+#include "TextEngine.h"
 
 #include <iostream>
 
 //#define GLEW_STATIC
+#include "ShaderObject.h"
+#include "sparestack.hpp"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include "ShaderObject.h"
 
 using namespace std;
 
@@ -25,70 +27,82 @@ class UIViewPortController;
 class UIWindow : public UIView {
 
 private:
-  // OPENGL STUFF
-  GLfloat aspect_ratio;
-  vector<UIView *> vUIViewGlobalStore; // all view including children are stored
-                                       // here so we can grab selection and
-                                       // forward messages accordingly
-  vector<int> vUIViewGlobalSpare;      // index of spare slots to fill ids
+    // OPENGL STUFF
+    GLfloat aspect_ratio;
+    vector<UIView*> vUIViewGlobalStore; // all view including children are stored
+        // here so we can grab selection and
+        // forward messages accordingly
+    vector<int> vUIViewGlobalSpare; // index of spare slots to fill ids
 
-  // index of view in vUIGlobalStore that we need to render.
+    // each view has in id which is the position in this stack. Views are owned elsewhere (inside other views or in user application)
+    sparestack<UIView*> mUiViews;
 
-  vector<int> rootViews;
-  vector<int> spareRootIds; // yada yada yada
-  vector<int>::iterator drawIterator;
+    int globalViewCount;
+    int returnViewCount();
+    int selectedViewID;
+    
+  
 
-  int globalViewCount;
-  int returnViewCount();
-  int selectedViewID;
+    frustrumStruct frustrum;
 
-  frustrumStruct frustrum;
+    // store a pointer to the app viewport controller. we dont own it so its just a raw pointer
+    std::unique_ptr<UIViewPortController> vpCntlr;
+    GLGui* eventHandler; // points to already existing handler.
 
-  // store a pointer to the app viewport controller. we dont own it so its just a raw pointer
-  UIViewPortController *vpCntlr;
-  GLGui *eventHandler; // points to already existing handler.
-
-  GLFWwindow *window;
-  ShaderObject *windowShader;
-  void checkOpenGLError();
+    GLFWwindow* window;
+    ShaderObject* windowShader;
+    void checkOpenGLError();
 
 public:
-  UIWindow(int width, int height);
+    UIWindow(int width, int height, std::string windowTitle = "", bool deferRegistration = false);
 
-  ~UIWindow();
 
-  void ResizeWindow(int width,
-                    int height); // GLGui will call this after it handles event.
+    ~UIWindow();
 
-  float scaleFactor;
+    void ResizeWindow(int width,
+        int height); // GLGui will call this after it handles event.
 
-  virtual void Init();
-  void InitGL(const char *name);
-  void DrawGui();
-  void ForceRefresh();
+    float scaleFactor = 1.0f;
 
-  void registerView(
-      UIView *newView,
-      UIView *sender); // add view to list and get id assigned and invoke init
-  void deRegisterView(int id); // delete a view.
+    void DrawGui();
+    void ForceRefresh();
+    int id();
 
-  UIView *getNodeFromID(int id);
+    // UIViews are owned at the place where they are created. windows only needs to refer
+    void addView(UIView* newView);
 
-  const char *guiName;
-  // void connectNodes(int outputNode_id, int inputNode_id, int fromPlugID,
-  //                   int toPlugID); // connect two nodes specifying which nodes
-  //                                  // and which inputs....
+    void addSubView(UIView* newView) override;
 
-  void handleEvent(keyStoreStruct key);
-  void setHandler(GLGui *eventHandlerPassThrough);
+    //helper for first window id not being set in vpcntlr
+    void fixParentRelationShip();
 
-  int nodeIDUnderMousePos(keyStoreStruct key);
 
-  void resetViewport();
 
-  GLFWwindow *getWindow();
-  TextEngine *textEngine;
-  bool programRunning;
+    void deRegisterView(int id); // delete a view.
+
+    // upon construction of UIViews, they will call this static method to get assigned an id and the pointer
+    // gets stored in this Application (associated with the 'active' window when the view was added)
+    void registerView(UIView* newView);
+
+    UIView* getNodeFromID(int id);
+
+    const char* guiName;
+    // void connectNodes(int outputNode_id, int inputNode_id, int fromPlugID,
+    //                   int toPlugID); // connect two nodes specifying which nodes
+    //                                  // and which inputs....
+
+    void handleEvent(keyStoreStruct key);
+    void setHandler(GLGui* eventHandlerPassThrough);
+
+    int nodeIDUnderMousePos(keyStoreStruct key);
+
+    void resetViewport();
+
+    GLFWwindow* getWindow();
+    TextEngine* textEngine;
+    bool programRunning;
+    // assigned in application. used to make context current
+    int rootID;
 };
 
-#endif
+

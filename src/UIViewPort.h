@@ -32,11 +32,10 @@ private:
 
 
 public:
-    UIViewPort(UIView *parent, int width, int height):UIView(parent, width, height) {}
+    UIViewPort(UIView *parent, int width, int height, std::string text = "VP"):UIView(parent, width, height, text) {}
     ~UIViewPort();
     void setZoomable(bool doIZoom);
     void setResizeable(bool doIResize);
-    void Init();
     void setGlobalPosition(float posX, float posY);
     void offsetGlobalPosition(float posX, float posY);
 

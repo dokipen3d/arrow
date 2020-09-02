@@ -4,13 +4,12 @@
 #include <GLFW/glfw3.h>
 
 
-#include <string.h>
+#include <string>
 #include <vector>
 #include "PlugTypes.h"
+#include "sparestack.hpp"
 
 #define GLFW_INCLUDE_GLU
-
-using namespace std;
 
 class Node;
 class UIWindow;
@@ -24,6 +23,9 @@ private:
 
     UIWindow *eventWindow;
     UIWindow *userPointerWindow;
+    static GLFWwindow* currentEventWindow;
+
+    sparestack<GLFWwindow*> glfwWindows;
 
 
 
@@ -37,13 +39,22 @@ public:
 
     // a flag to make sure we only resize one call at a time.
     static bool windowResized;
+    static bool firstWindowCreated;
     void DrawGui();
     void CloseGUI(int return_code);
     void processEvents();//called in main loop and checkes key presses to maniuplate drawing of ui and perform functions. IE. interface!
     void addWindow(UIWindow *window);
     //GUI view stuff........
 
-    void connectNodes(int outputNode_id, int inputNode_id, int fromPlugID, int toPlugID );
+    // create a window and set it's user pointer to the int value given. doesn't need to get value back as it is up to application/UIWindow to destroy the windows with the ids
+    void createWindow(std::size_t id, int width, int height, std::string title);
+    void destroyWindow(std::size_t id);
+
+    void makeWindowContextCurrent(std::size_t id);
+    void swapBuffers(std::size_t id);
+    void waitEvents();
+
+
 
     static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
@@ -62,8 +73,5 @@ public:
 
     void enableMouseButtonCallback(GLFWwindow *window);
     void disableMouseButtonCallback(GLFWwindow *window);
-
-
-
 
 };

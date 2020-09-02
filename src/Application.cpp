@@ -1,9 +1,9 @@
 #include "Application.h"
 #include <iostream>
 #include <future>
+#include <memory>
 #include "sparestack.hpp"
 
-using namespace std;
 
 // std::vector<UIWindow*> Application::windows{new UIWindow(1024, 576)};
 // UIWindow* Application::mainWindow(Application::windows.front());
@@ -12,6 +12,8 @@ std::vector<UIWindow*> Application::windows{};
 sparestack<UIWindow*> Application::windowstack{};
 
 UIWindow* Application::mainWindow;
+UIWindow* Application::activeWindow;
+
 std::unique_ptr<GLGui> Application::appGui;
 bool Application::bProgramRunning(true);
 
@@ -22,31 +24,67 @@ Application::Application()
     
     appGui = std::make_unique<GLGui>();
 
-    //mainWindow = new UIWindow(NULL, 1024, 576); //set windows to be 0 as it is stored by itself at index 0.
-
-    // for now as we start this refactor, put the main window into the vec
-
-    //register self
-    cout << "about to register mainWindow to self" << std::endl;
-    
-    //mainWindow->registerView(mainWindow, (UIView*)this);
-    //mainWindow->setHandler(appGui);
-    
-
-    cout << "Initialised. about to run UIController apploop" << std::endl;
 }
 
 void Application::addWindow(UIWindow* window){
-    windows.push_back(window);
-    mainWindow = window;
-    cout << "about to run UIController appgui init" << std::endl;
-    mainWindow->InitGL("arrowtest");
-    setCallBacks(); // needs to be done after init gl
-    cout << "ran UIController appgui init" << std::endl;
+    cout << "adding window" << std::endl;
 
-    appGui->addWindow(mainWindow);
+    auto idgiven = windowstack.push(window);
+    windowstack[idgiven]->rootID = idgiven;
+    appGui->createWindow(idgiven, window->width(),  window->height(), window->text);
+    if (!mainWindow) {
+        mainWindow = window;
+        activeWindow = window;
+    }
 }
 
+
+
+
+std::unique_ptr<UIWindow> Application::createBasicWindow(int width, int height, std::string title ) {
+
+    auto windowUptr = std::make_unique<UIWindow>(width, height, title);
+    auto windowRawPtr =  windowUptr.get();
+    if(!mainWindow){
+        mainWindow = windowRawPtr;
+        activeWindow = windowRawPtr;
+    }
+
+    // window stack takes ownership
+    auto id = windowstack.push(windowRawPtr);
+    appGui->createWindow(id, width,  height, title);
+
+    return std::move(windowUptr);
+}
+
+void Application::registerView(UIView* newView, bool selfRegister) {
+
+    // if its a window self registering then we shoud then do that!
+    if (selfRegister) {
+        static_cast<UIWindow*>(newView)->registerView(newView);
+    } else if (activeWindow){     // up to user to make sure that the right window is active
+        activeWindow->registerView(newView);
+    }
+    else {
+        // ?
+    }
+
+}
+
+
+void Application::forceRefresh(std::size_t id) {
+
+
+    windowstack[id]->ForceRefresh();
+
+}
+
+
+void Application::framebuffer_size_callback(std::size_t id, int width, int height) {
+
+    windowstack[id]->setSize(width, height);
+
+}
 
 
 void Application::quit()
@@ -80,20 +118,24 @@ void Application::connectNodes(int outputNode_id, int inputNode_id, int fromPlug
 
 void Application::exec()
 {
-    std::vector<std::future<void>> windowfutures;
-
-    for (auto &window : windows)
+    for (auto i = 0; i < windowstack.size(); ++i)
     {
 
         while (bProgramRunning)
         {
-
+            appGui->makeWindowContextCurrent(i);
             processEvents();
-            window->DrawGui();
-            glfwSwapBuffers(window->getWindow());
-            glfwWaitEvents();
+            windowstack[i]->resolveSize();
+            windowstack[i]->DrawGui();
+            appGui->swapBuffers(i);
+            appGui->waitEvents();
         }
     }
+}
+
+void  Application::swapBuffers(std::size_t id) {
+    appGui->swapBuffers(id);
+
 }
 
 void Application::callUINodeDraw()
@@ -132,11 +174,10 @@ void Application::processEvents()
     appGui->processEvents();
 }
 
-void Application::setCallBacks()
-{
-
-    appGui->setCallBacks(mainWindow->getWindow());
+void Application::handleEvent(std::size_t id, keyStoreStruct keyStore) {
+    windowstack[id]->handleEvent(keyStore);
 }
+
 
 void Application::closeGUI()
 {

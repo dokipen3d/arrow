@@ -2,10 +2,12 @@
 #define UIVIEW_H
 
 #include <vector>
+#include <memory>
 #include <GL/glew.h>
 //#define GLEW_STATIC
 #include <GLFW/glfw3.h>
 #include "PlugTypes.h"
+#include <string>
 
 
 
@@ -17,31 +19,28 @@ class Node;
 struct keyStoreStruct;
 
 
-
 class UIView {
 
+    // to allow sub class to access protected members and set in its constructor 
 
     protected:
 
-
-       //the id of this views parent. We can ask the main window to give it to us
-        int parentViewID;
         UIView* parent; // needs to be before rootWindow so that constructor can test it against self
         //store a pointer to main window. We dont own it so its a raw pointer
         //only need to refer to it.
+
+
+         // to be able to create a uiview and have it own its own window that is embedded in. also needs to be before rootWindow otherwise it gets reinitialized to nullptr after potentially embedding a window
+        std::unique_ptr<UIWindow> embeddedWindow = nullptr;
+
+
         UIWindow *rootWindow;
-
- 
-
-        //store indexes to children.
-        //only store indexes because I only want ONE place to store the actuall addresses of all the views
-        //best place I can think of is in the window that owns them all.
-        //As soon as I start having multiple places where addresses can be stores it can get complex.
+       
+        //store indices to children.
         vector<int> UIViewIndexStore;
-        vector<int>::iterator viewIndexIterator;
 
         //how many view are its children. mainly for controlling vpCntlr dividers
-        int viewCount;
+        std::size_t viewCount();
 
         //helper variables for drawing in selection mode
         GLubyte drawIDColour[3];
@@ -50,18 +49,19 @@ class UIView {
 
         bool drawable;
         bool childrenDrawable;
+        bool registered;
 
         //local helper storage for control management
-        bool lmbPressed;
+        bool lmbPressed;;
 
 
     public:
 
 
 
-        UIView(UIView *parent, int width, int height);//HAVE to pass a root node that keeps track of this globally
+        UIView(UIView* parent, int width, int height, std::string text = {}, bool deferRegistration = false);//HAVE to pass a root node that keeps track of this globally
+        UIView(const UIView& uiview) = default;
         virtual ~UIView();
-        virtual void Init();
         virtual void Draw();// make it virtual so that it will call the derived function even if we refer to the object as a UIView
         void DrawSubViews();
         virtual void DrawSelectPass();
@@ -70,6 +70,8 @@ class UIView {
         virtual void viewDragged(keyStoreStruct key, int senderID);
         virtual void viewReleased(keyStoreStruct key, int senderID);
         virtual void resolveSize();//to notify children of parent resizing.
+        virtual void addSubView(UIView* newView);
+
 
         //void setRoot(GLGui *root); //done in constructor
         void movePosition(float moveX, float moveY);
@@ -80,12 +82,19 @@ class UIView {
         void setDrawable(bool amIdrawable);
         void setChildrenDrawable(bool areChildrenDrawable);
         void setColour (GLfloat R, GLfloat G, GLfloat B, GLfloat A);
-        UIView* getParent();
+        UIView* Parent();
         UIPoint getWorldPos();
-        void addSubView(UIView* newView);
         void printID();
+        std::size_t id();
+        void setId(std::size_t id);
+        void setLocalId(std::size_t id);
+        void setParent(UIView* newParent);
         void deRegisterChildren();
         bool isRootWindow();
+        void removeFromChildren(std::size_t id);
+        std::string text;
+        int width(){return viewRect.size.width;};
+        int height(){return viewRect.size.height;};
 
 
         //bool stopWorldPosSearch;//for VPts to know when they don't need to search any more higher.
@@ -95,7 +104,6 @@ class UIView {
         UIRect fbRect;
         int globalIndexID;
         int localID;
-        void setParentID(int parentID);
 
 
 };

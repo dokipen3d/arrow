@@ -54,3 +54,15 @@ any glfwgui backend class NEEDS to
  UIWindow, Application and GLFWGUI relationship
  - GLFW events need to tell UIWindow to resize through Application 
  - Application has a createWindow function that returns a UIWindow* (so that UIViews can create them). unique_ptr<UIwindow> in Application. This must call the glfwgui to create the GLFWwindow and there must be a window id (stored in UIWindow?) and also set in the user pointer! we store it in the UIWindow so that upon destruction, we can tell the application to delete the glfw window 
+
+
+
+REMOVING THE NEED FOR ADDSUBVIEWCONTROLLER
+1) when adding a viewportController to a view , simply make the viewportController take on the dimensions and transform of the enclosing view
+    - change (or add) the constructor to not take width and height, but just inherit the parent.
+    - the viewport is the global opengl viewport so need to recursively find the global coords by traversing up. could use caching to early stop
+2) also when adding a viewport controller to another viewport controller, use one of the viewports as the enclosing view
+    - will need to add another constructor to take the index of which VP to use as the encloser.
+3) will need to make finding the global positions a solid process.
+4) find out exactly when we need to resolve dimensions
+5) add flags to check if resolving is actually needed

@@ -35,7 +35,7 @@
 
 
     struct UIPoint {//position
-        UIPoint() : x(0.0), y(0.0) {}
+        UIPoint() : x(0), y(0) {}
         UIPoint(float X, float Y) : x(X), y(Y) {}
         int x;
         int y;

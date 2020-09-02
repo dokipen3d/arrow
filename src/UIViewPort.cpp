@@ -32,9 +32,10 @@ void UIViewPort::setGlobalPosition(float posX, float posY)
 
 void UIViewPort::offsetGlobalPosition(float posX, float posY)
 {
+
     globalRect.point.x += posX;
     globalRect.point.y += posY;
-    //cout << "global rect moved is " << globalRect.point.x << endl;
+    cout << "global rect moved is " << globalRect.point.y << endl;
 
 }
 
@@ -78,28 +79,6 @@ void UIViewPort::DrawSelectPass()
     glLoadIdentity();
 
     UIView::DrawSelectPass();
-
-}
-
-void UIViewPort::Init(){
-
-
-    UIView::Init();
-
-
-
-
-    zoomFactor0 = 1.0;
-    zoomFactorRatio = 1.0;
-    zoomFactor = 1.0;
-    zoomInc = 0.03;
-    zoomMin = 0.2;
-    zoomMax = 3.0;
-    posX = 0.0;
-    posY = 0.0;
-    posZ = 0.0;//holds final values
-
-
 
 }
 

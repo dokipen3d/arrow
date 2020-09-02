@@ -34,11 +34,20 @@ public:
 
     // if this is closed, the app closes
     static UIWindow *mainWindow;
+    static UIWindow *activeWindow;
+
 
     static void addWindow(UIWindow* window);
-    static void createWindow(UIWindow* window);
+    static void addWindow2(UIWindow* window);
 
+    static std::unique_ptr<UIWindow> createBasicWindow(int width, int height, std::string title );
 
+    // calls the register view of the activeWindow
+    static void Application::registerView(UIView* newView, bool selfRegister = false);
+    static void Application::forceRefresh(std::size_t id);
+    static void Application::framebuffer_size_callback(std::size_t id, int width, int height);
+    static void handleEvent(std::size_t id, keyStoreStruct keyStore);
+    static void swapBuffers(std::size_t id);
 
     void setGui(std::unique_ptr<GLGui> gui);
     void setAppCore(std::unique_ptr<AppCore> appC);
@@ -53,7 +62,6 @@ public:
 
     void connectEventToWindow();
     void processEvents();//get keySTore from GLGui and do something with it
-    static void setCallBacks();
     void closeGUI();
 
 

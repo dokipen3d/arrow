@@ -1,32 +1,67 @@
 #pragma once
-#include <vector>
-#include <utility>
 #include <functional>
+#include <utility>
+#include <vector>
 
 template <typename T>
 class sparestack {
 
 public:
-// returns the position the item was inserted into
-    template <typename Callable>
-    std::pair<std::size_t, T&> push(T in, const Callable& callable)
+
+    void reserve(std::size_t count) {
+        _data.reserve(count);
+    }
+
+    // returns the position the item was inserted into
+    template <typename T, typename Callable>
+    std::size_t push(T&& in, const Callable& callable)
     {
         if (spareIds.size() == 0) {
 
-            _data.push_back(in);
+            _data.push_back(std::forward<T>(in));
+            return _data.size()-1;
         } else {
 
             int accessElement = spareIds.front();
 
-            _data.at(accessElement - 1) = in;
+            _data.at(accessElement - 1) = std::forward<T>(in);
             spareIds.pop_back();
-            callable(accessElement - 1, in);
-            return {accessElement - 1, in };
+            callable(accessElement - 1, std::forward<T>(in));
+            return accessElement - 1;
         }
-    };
+    }
 
-    std::pair<std::size_t, T&> push(T in){
-        return push(in, [](auto a, auto b){ return;});
+    std::size_t size()
+    {
+        return _data.size() - spareIds.size();
+    }
+
+    void eraseAt(std::size_t position)
+    {
+        if (position < _data.size()) { // if position is within range
+            if (position == _data.size()) { // if UIView id is at the end exactly
+                //_data.at(id)->deRegisterChildren();
+                _data.pop_back();
+            } else { // item is in middle of data somewhere
+                spareIds.push_back(position); // add the spare slot to sparestack
+            }
+        }
+    }
+
+    template <typename T>
+    std::size_t push(T&& in)
+    {
+        return push(std::forward<T>(in), [](auto a, auto b) { return; });
+    }
+
+    T& operator[](int idx)
+    {
+        return _data[idx];
+    }
+
+    T operator[](int idx) const
+    {
+        return _data[idx];
     }
 
 private:
