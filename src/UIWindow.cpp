@@ -6,8 +6,8 @@
 
 using namespace std;
 
-UIWindow::UIWindow(int width, int height, std::string windowTitle, bool deferRegistration)
-    : UIView(this, width, height, windowTitle, deferRegistration) // passing this will cause the UIView
+UIWindow::UIWindow(int width, int height, std::string windowTitle)
+    : UIView(this, width, height, windowTitle) // passing this will cause the UIView
     // contructor to set itself as the root
 {
     // first we set the application window which means the active one is set if one wasn't before

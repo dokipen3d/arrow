@@ -48,6 +48,7 @@ public:
     static void Application::framebuffer_size_callback(std::size_t id, int width, int height);
     static void handleEvent(std::size_t id, keyStoreStruct keyStore);
     static void swapBuffers(std::size_t id);
+    static void Application::setActiveWindow(UIWindow* window);
 
     void setGui(std::unique_ptr<GLGui> gui);
     void setAppCore(std::unique_ptr<AppCore> appC);

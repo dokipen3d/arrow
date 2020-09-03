@@ -126,6 +126,9 @@ void GLGui::MousePosCallback(GLFWwindow* window, double xpos, double ypos)
 void GLGui::processEvents()
 { //called in main loop and forwards events to windows for further handling
     std::size_t currentWindowID = reinterpret_cast<int>(glfwGetWindowUserPointer(GLGui::currentEventWindow));
+
+    // we have to set the current window context, because when an event occurs, it might not be in the right window loop (they can occur anytime
+    makeWindowContextCurrent(currentWindowID);
     Application::handleEvent(currentWindowID, GLGui::keyStore);
 
 }

@@ -47,7 +47,7 @@ public:
     void resizeGlobalSubViewPorts(); //recalc the rect (local and global) of subviews
     void resolveSize() override;
     void setColour(int pos, float R, float G, float B, float A);
-    bool DIVIDED;
+    bool m_bDivided;
 };
 
 #endif

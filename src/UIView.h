@@ -1,10 +1,8 @@
-#ifndef UIVIEW_H
-#define UIVIEW_H
+#pragma once
 
 #include <vector>
 #include <memory>
 #include <GL/glew.h>
-//#define GLEW_STATIC
 #include <GLFW/glfw3.h>
 #include "PlugTypes.h"
 #include <string>
@@ -21,23 +19,20 @@ struct keyStoreStruct;
 
 class UIView {
 
-    // to allow sub class to access protected members and set in its constructor 
-
     protected:
 
-        UIView* parent; // needs to be before rootWindow so that constructor can test it against self
+        // needs to be before rootWindow so that constructor can test it against self
         //store a pointer to main window. We dont own it so its a raw pointer
         //only need to refer to it.
-
+        UIView* parent;
 
          // to be able to create a uiview and have it own its own window that is embedded in. also needs to be before rootWindow otherwise it gets reinitialized to nullptr after potentially embedding a window
         std::unique_ptr<UIWindow> embeddedWindow = nullptr;
 
-
         UIWindow *rootWindow;
        
         //store indices to children.
-        vector<int> UIViewIndexStore;
+        vector<int> children;
 
         //how many view are its children. mainly for controlling vpCntlr dividers
         std::size_t viewCount();
@@ -59,7 +54,7 @@ class UIView {
 
 
 
-        UIView(UIView* parent, int width, int height, std::string text = {}, bool deferRegistration = false);//HAVE to pass a root node that keeps track of this globally
+        UIView(UIView* parent, int width, int height, std::string text = {});
         UIView(const UIView& uiview) = default;
         virtual ~UIView();
         virtual void Draw();// make it virtual so that it will call the derived function even if we refer to the object as a UIView
@@ -107,5 +102,3 @@ class UIView {
 
 
 };
-
-#endif

@@ -13,10 +13,10 @@ UIViewPortController::UIViewPortController(UIView* parent, int width, int height
     : UIView(parent, width, height, text)
     , divider(nullptr)
     , viewRight(nullptr)
-    , DIVIDED(false)
+    , m_bDivided(false)
     , divPosition(0)
     , dragging(false)
-    , dividerThickness(8.0)
+    , dividerThickness(5.0)
     , oriented(orient)
 {
     //set up main viewport. there is one by default before dividing.
@@ -29,7 +29,6 @@ UIViewPortController::UIViewPortController(UIView* parent, int width, int height
 UIViewPortController::UIViewPortController(UIViewPortController* parent, int positionIndex, orientation orient, std::string text)
     : UIViewPortController(parent->viewAtIndex(positionIndex), parent->viewAtIndex(positionIndex)->width(), parent->viewAtIndex(positionIndex)->height(),
         orient, text){
-    //setDrawable(false);
 }
 
 
@@ -51,7 +50,7 @@ UIView* UIViewPortController::viewAtIndex(int position) {
     if (position == 0) {
         return viewLeft.get();
     }
-    else if (DIVIDED && position == 1) {
+    else if (m_bDivided && position == 1) {
         cout << "returning view at right\n";
         return viewRight.get();
     }
@@ -62,7 +61,7 @@ UIView* UIViewPortController::viewAtIndex(int position) {
 
 int UIViewPortController::width(int position)
 {
-    if (DIVIDED && position > 0) {
+    if (m_bDivided && position > 0) {
         return viewRight->width();
     }
     else {
@@ -72,7 +71,7 @@ int UIViewPortController::width(int position)
 
 int UIViewPortController::height(int position)
 {
-    if (DIVIDED && position > 0) {
+    if (m_bDivided && position > 0) {
         return viewRight->height();
     }
     else {
@@ -83,14 +82,13 @@ int UIViewPortController::height(int position)
 void UIViewPortController::divide(float divPC)
 {
 
-    DIVIDED = true;
+    m_bDivided = true;
 
     cout << "dividing"
          << "\n";
 
     if (oriented == VERTICAL) {
         divPercentLocation = divPC;
-        //create the views for adding into the VPCtrlr
 
         if (divider == nullptr) {
             divider = std::make_unique<UIViewPort>(this, dividerThickness, viewRect.size.height, "div");
@@ -99,13 +97,11 @@ void UIViewPortController::divide(float divPC)
             viewRight = std::make_unique<UIViewPort>(this, 0, 0, "VPRight");
         }
 
-       
         resolveSize();
     }
 
     if (oriented == HORIZONTAL) {
         divPercentLocation = 1.0 - divPC; //reverse because of opengl y coordinate
-        //create the views for adding into the VPCtrlr
 
         if (divider == nullptr) {
             divider = std::make_unique<UIViewPort>(this, viewRect.size.width, dividerThickness, "div");
@@ -114,7 +110,6 @@ void UIViewPortController::divide(float divPC)
             viewRight = std::make_unique<UIViewPort>(this, 0, 0, "VPBottom"); //create it with no size, it wil get resolved later on...
         }
       
-
         resolveSize();
     }
 }
@@ -122,7 +117,6 @@ void UIViewPortController::divide(float divPC)
 void UIViewPortController::resolveSize()
 {
     //set self to be parent viewports viewRect because it might not have been set before
-    
     viewRect = parent->getRect();
     //cout << "resolving VPCNtrol " << id() << " from parent " << parent->id() << " to " << viewRect.size.width << " " << viewRect.size.height << "\n";
     resizeGlobalSubViewPorts();
@@ -133,7 +127,7 @@ void UIViewPortController::setColour(int pos, float R, float G, float B, float A
     if (pos == 0) {
         viewLeft->setColour(R, G, B, A);
     }
-    else if (DIVIDED && pos == 1) {
+    else if (m_bDivided && pos == 1) {
         viewRight->setColour(R, G, B, A);
     }
 }
@@ -166,7 +160,7 @@ void UIViewPortController::resizeGlobalSubViewPorts() //for setting up sizes aft
         offsetSizeY = divPositionY + dividerThickness;
     }
 
-    if (UIViewIndexStore.size() == 1) //if its only one viewport....
+    if (children.size() == 1) //if its only one viewport....
     { //set it's size to be the VPCtlr viewRect...remember keep VPCtlrs pos 0.0, 0.0....
         viewLeft->setPosition(0.0, 0.0);
         //cout << "setting left view to " <<  viewRect.size.width << " " << viewRect.size.height << "\n";
@@ -175,7 +169,7 @@ void UIViewPortController::resizeGlobalSubViewPorts() //for setting up sizes aft
         //cout << "resolving left view\n";
         //viewLeft->resolveSize();
 
-    } else if (UIViewIndexStore.size() == 3) {
+    } else if (children.size() == 3) {
         viewLeft->setColour(0.5, 0.0, 0.5, 1.0);
         viewLeft->setPosition(0.0, 0.0);
         viewLeft->setSize(finalWidth,
@@ -213,14 +207,13 @@ void UIViewPortController::addChildView(UIView* newView, int index)
 {
 
     //add it to the viewport that was created at div 1-2
+    // dont need to resolve here as the new views will be resolved in their contructor
     if (index == 0) {
         viewLeft->addSubView(newView);
-        //resizeGlobalSubViewPorts();
     }
 
     if (index == 1) {
         viewRight->addSubView(newView);
-        //resizeGlobalSubViewPorts();
     }
 }
 
@@ -229,15 +222,15 @@ void UIViewPortController::addSubViewPortController(UIViewPortController* newVie
 
     //add it to the viewport that was created at div 1-2
     //set it to the size of that viewport if its another vpcntlr
+    // dont need to resolve here as the new views will be resolved in their contructor
+
     if (index == 0) {
         //format incoming viewportController size so that the viewRect matches the viewport its going into.
         viewLeft->addSubView(newView);
-        //viewLeft->resolveSize();
     }
 
     if (index == 1) {
         viewRight->addSubView(newView);
-        //viewRight->resolveSize();
     }
 }
 
@@ -321,7 +314,7 @@ void UIViewPortController::resizeFromDivider(int offsetX, int offsetY)
         viewLeft->offsetSize(offsetX, 0);
 
         //viewLeft->offsetGlobalPosition(offsetX, globalPosOfParentVPCtlr.y);
-        //viewLeft->resolveSize();
+        viewLeft->resolveSize();
 
         divider->offsetGlobalPosition(offsetX, 0);
 
@@ -329,19 +322,19 @@ void UIViewPortController::resizeFromDivider(int offsetX, int offsetY)
         //cout << " got here." << endl;
 
         viewRight->offsetGlobalPosition(offsetX, 0);
-        //viewRight->resolveSize();
+        viewRight->resolveSize();
     }
 
     if (oriented == HORIZONTAL) {
         //cout << " in resizefromdivider. offset is " << offsetY << endl;
         viewLeft->offsetSize(0, -offsetY);
-        //viewLeft->resolveSize();
+        viewLeft->resolveSize();
 
         divider->offsetGlobalPosition(0, -offsetY);
 
         viewRight->offsetSize(0.f, static_cast<float>(offsetY));
         viewRight->offsetGlobalPosition(0.f, static_cast<float>(-offsetY));
-        //viewRight->resolveSize();
+        viewRight->resolveSize();
     }
 
 }

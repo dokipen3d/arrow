@@ -20,16 +20,18 @@ using namespace std;
 // 2. we create a uiview (like a button). it doesn't have a parent passed in so it goes to the else
 // 3. in the else, we create a UIWindow which calls its constructor which in turn calls UIView(this) as parent
 // 4. this will cause the UIWindow->UIView constructor to go into the if(parent) branch. here we should check if parent is == this!
-UIView::UIView(UIView* parentIn, int width, int height, std::string text, bool deferRegistration)
+UIView::UIView(UIView* parentIn, int width, int height, std::string text)
     : parent(parentIn)
     , rootWindow([&]() -> UIWindow* {
         cout << "in uiview lambda " << text << " \n";
         UIWindow* root = nullptr;
-        if (parentIn && parentIn->isRootWindow() && isRootWindow()) { // this means the UIWindow was created
-            // manually so set to self
+        if (parentIn && parentIn->isRootWindow() && isRootWindow()) { 
+            // this means the UIWindow was created
+            // manually (either in the else of an owning parentless view, or a window directly, so set to self
                 cout << "in uiview construct of UIWindow! setting root to self\n";
                 root = static_cast<UIWindow*>(parent);
-        } else if (parentIn) { // standard way of parenting views, can just steal
+        } else if (parentIn) { 
+            // standard way of parenting views, can just steal
             // the root from the parent
             cout << "in uiview construct of something else! setting root to "
                     "parent root\n";
@@ -38,9 +40,6 @@ UIView::UIView(UIView* parentIn, int width, int height, std::string text, bool d
             cout << "no parent. is an orphan, setting up a window!\n";
             // this UIView owns the window
             embeddedWindow = std::make_unique<UIWindow>(width, height, text+"_window");
-            // window has to be constructed for self registration to happen as the stakc wouldnt be ready yet.
-            //Application::registerView(this, isRootWindow());
-            //embeddedWindow->fixParentRelationShip();
             root = embeddedWindow.get();
         }
         return root;
@@ -59,7 +58,13 @@ UIView::UIView(UIView* parentIn, int width, int height, std::string text, bool d
 
     cout << "in uiview constructor " << text << "\n";
 
+    // so that we register to the right one
+    if (parent) {
+        Application::setActiveWindow(parent->rootWindow);
+    }
+
     if (!isRootWindow()) { // windows register in their own constructor
+        
         Application::registerView(this, isRootWindow());
     }
     // globalID should have been set by now
@@ -76,7 +81,7 @@ UIView::UIView(UIView* parentIn, int width, int height, std::string text, bool d
         embeddedWindow->addSubView(this);
     } else if (!isRootWindow()) {  // do it this order because of 0 based index
         localID = parent->viewCount();
-        parent->UIViewIndexStore.push_back(globalIndexID);
+        parent->children.push_back(globalIndexID);
     }
 }
 
@@ -86,7 +91,7 @@ std::size_t  UIView::id() {
 
 std::size_t UIView::viewCount()
 {
-    return UIViewIndexStore.size();
+    return children.size();
 }
 
 bool UIView::isRootWindow()
@@ -106,20 +111,20 @@ void UIView::setLocalId(std::size_t id)
 
 //starts at position of given local id and bubbles up and decrements local id
 void UIView::removeFromChildren(std::size_t localId){
-    if (UIViewIndexStore.size() > 0){
+    if (children.size() > 0){
         //go through from this view's local id to the end of the child list and update
-        for (int i = localId-1; i < UIViewIndexStore.size(); i++){
+        for (int i = localId-1; i < children.size(); i++){
             //get id of node at the childlist at the specific index we are currently stored at
-            int viewToDecID = UIViewIndexStore.at(i);
+            int viewToDecID = children.at(i);
 
             //copy back the id of the node in front
-            UIViewIndexStore.at(i) = parent->UIViewIndexStore.at(i+1);
+            children.at(i) = parent->children.at(i+1);
 
             UIView *nodeToDecrementLocalID = rootWindow->getNodeFromID(viewToDecID);
             nodeToDecrementLocalID->localID--;
         }
         //finally pop back the child list
-        UIViewIndexStore.pop_back();
+        children.pop_back();
 
     }
 
@@ -136,7 +141,7 @@ UIView::~UIView()
     // then deregister this node. dont need to deregister children as their destructors will get called?
     rootWindow->deRegisterView(globalIndexID);
 
-    for (auto index : UIViewIndexStore ){
+    for (auto index : children ){
         rootWindow->deRegisterView(index);
     }
 }
@@ -145,7 +150,7 @@ UIView::~UIView()
 void UIView::resolveSize()
 {
     //cout << "resolving " << id() << " " << text << " from parent " << parent->id() << ". view is currently " << viewRect.size.width << " " << viewRect.size.height << " pos "  << globalRect.point.x << " " << globalRect.point.y << "\n";
-    for (auto& index : UIViewIndexStore) {
+    for (auto& index : children) {
         rootWindow->getNodeFromID(index)->resolveSize();
     }
 }
@@ -155,7 +160,7 @@ void UIView::addSubView(UIView* newView)
     // do it this order because of 0 based index
     if (!isRootWindow()) {
         newView->setLocalId(viewCount());
-        UIViewIndexStore.push_back(newView->id());
+        children.push_back(newView->id());
         newView->setParent(this);
     }
 }
@@ -217,7 +222,7 @@ void UIView::Draw()
 void UIView::DrawSubViews()
 {
 
-    for (auto it = UIViewIndexStore.begin(); it < UIViewIndexStore.end(); ++it) {
+    for (auto it = children.begin(); it < children.end(); ++it) {
 
         //cout << "in vertex index iterator. fist node id is " << *it << endl;
         // if(!rootWindow){
@@ -259,14 +264,14 @@ void UIView::printID()
 
 void UIView::deRegisterChildren()
 {
-    for (auto it = UIViewIndexStore.begin(); it < UIViewIndexStore.end(); ++it) {
+    for (auto it = children.begin(); it < children.end(); ++it) {
         rootWindow->deRegisterView(*it);
     }
 }
 
 void UIView::DrawSelectPassSubViews()
 {
-    for (auto it = UIViewIndexStore.begin(); it < UIViewIndexStore.end(); ++it) {
+    for (auto it = children.begin(); it < children.end(); ++it) {
         //cout << "in it. getting node from id " << *it << "\n";
         if (!rootWindow) {
             cout << "root is null!\n ";

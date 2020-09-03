@@ -57,6 +57,9 @@ any glfwgui backend class NEEDS to
 
 
 
+BUGS
+1) Resizing viewportCs doesn't resize child viewportCs
+
 REMOVING THE NEED FOR ADDSUBVIEWCONTROLLER
 1) when adding a viewportController to a view , simply make the viewportController take on the dimensions and transform of the enclosing view
     - change (or add) the constructor to not take width and height, but just inherit the parent.

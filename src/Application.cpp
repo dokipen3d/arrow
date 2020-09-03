@@ -34,8 +34,10 @@ void Application::addWindow(UIWindow* window){
     appGui->createWindow(idgiven, window->width(),  window->height(), window->text);
     if (!mainWindow) {
         mainWindow = window;
-        activeWindow = window;
+       
     }
+
+    activeWindow = window;
 }
 
 
@@ -118,24 +120,32 @@ void Application::connectNodes(int outputNode_id, int inputNode_id, int fromPlug
 
 void Application::exec()
 {
+
+    while (bProgramRunning)
+
     for (auto i = 0; i < windowstack.size(); ++i)
     {
 
-        while (bProgramRunning)
         {
             appGui->makeWindowContextCurrent(i);
-            processEvents();
-            windowstack[i]->resolveSize();
+            //windowstack[i]->resolveSize();
             windowstack[i]->DrawGui();
             appGui->swapBuffers(i);
-            appGui->waitEvents();
         }
+        appGui->waitEvents();
+        processEvents();
+
     }
 }
 
 void  Application::swapBuffers(std::size_t id) {
     appGui->swapBuffers(id);
 
+}
+
+void Application::setActiveWindow(UIWindow* window)
+{
+    activeWindow = window;
 }
 
 void Application::callUINodeDraw()

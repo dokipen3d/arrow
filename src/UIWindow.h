@@ -54,7 +54,7 @@ private:
     void checkOpenGLError();
 
 public:
-    UIWindow(int width, int height, std::string windowTitle = "", bool deferRegistration = false);
+    UIWindow(int width, int height, std::string windowTitle = {} );
 
 
     ~UIWindow();

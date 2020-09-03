@@ -40,13 +40,17 @@ int main( int argc, char* argv[] )
     ////registerView(vpCntlr.get());
     vpCntlr->divide(0.06);
 
+    //auto view2 = std::make_unique<UIView>(nullptr, 1280, 768, "another window?");
+
     ////cout << "about to create 2nd UIVPC" << std::endl;
 
-//UIViewPortController* testCntlr = new UIViewPortController(vpCntlr.get(), 1 , VERTICAL, "vpNew");
+    UIViewPortController* testCntlr = new UIViewPortController(vpCntlr.get(), 0 , VERTICAL, "vpNew");
     //cout << "about to add 2nd UIVPC as sub" << std::endl;
 
     //vpCntlr->addSubViewPortController(testCntlr, 0);
-    //testCntlr->divide(0.1);
+    testCntlr->divide(0.1);
+
+    auto window3 = std::make_unique<UIWindow>(2000, 320, "odd one");
 
     //UIViewPortController* testCntlr2 = new UIViewPortController(vpCntlr.get(), 0.0, 0.0, VERTICAL);
     //testCntlr->addSubViewPortController(testCntlr2, 1);
