@@ -1,4 +1,14 @@
- 1) move init GL to GLFWGUI and somehow forward width/height
+ 
+Idea for vertex representation
+
+2 floats for 2d lower left origin of quad.
+1 float for angle of where upper left point is on the 0 plane
+1 float is the distance from origin
+
+Depth?
+
+
+1) move init GL to GLFWGUI and somehow forward width/height
  2) remove all viewController from window. (will now access using static methods)
  3) look at UIView init(). replace the check for root window. sort out registering etc
  
@@ -76,3 +86,4 @@ SIMPLE VIEWPORTCNTRLR?
 - do we need a simple viewport controller that all views have so that they can embed children? I guess a layout would do that? or layout would be the more advanced version of that much like the current vpcntlr is
 
 SORT OUT resolving size happening more than once. figure out which event it is coming from and only do it once.
+
