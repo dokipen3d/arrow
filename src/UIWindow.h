@@ -51,13 +51,15 @@ private:
 
     GLFWwindow* window;
     ShaderObject* windowShader;
-    void checkOpenGLError();
 
 public:
     UIWindow(int width, int height, std::string windowTitle = {} );
 
 
     ~UIWindow();
+
+    void checkOpenGLError();
+
 
     void ResizeWindow(int width,
         int height); // GLGui will call this after it handles event.

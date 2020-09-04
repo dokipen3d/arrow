@@ -58,7 +58,7 @@ UIWindow::UIWindow(int width, int height, std::string windowTitle)
 
 void UIWindow::ForceRefresh()
 {
-
+    //resolveSize();
     //DrawGui();
 
 }

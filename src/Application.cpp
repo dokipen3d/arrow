@@ -85,6 +85,7 @@ void Application::forceRefresh(std::size_t id) {
 void Application::framebuffer_size_callback(std::size_t id, int width, int height) {
 
     windowstack[id]->setSize(width, height);
+    windowstack[id]->resolveSize();
 
 }
 
@@ -133,7 +134,7 @@ void Application::exec()
             appGui->swapBuffers(i);
         }
         appGui->waitEvents();
-        processEvents();
+        //processEvents();
 
     }
 }

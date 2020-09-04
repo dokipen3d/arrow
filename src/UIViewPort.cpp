@@ -27,16 +27,12 @@ void UIViewPort::setGlobalPosition(float posX, float posY)
 {
     globalRect.point.x = posX;
     globalRect.point.y = posY;
-    //cout << "global rect offset is " << globalRect.point.x << endl;
 }
 
 void UIViewPort::offsetGlobalPosition(float posX, float posY)
 {
-
     globalRect.point.x += posX;
     globalRect.point.y += posY;
-    cout << "global rect moved is " << globalRect.point.y << endl;
-
 }
 
 

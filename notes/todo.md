@@ -58,14 +58,21 @@ any glfwgui backend class NEEDS to
 
 
 BUGS
-1) Resizing viewportCs doesn't resize child viewportCs
+1) getWorldPos needs to recursively go up and accumulate the difference between the current viewRect and its parents viewRect
 
 REMOVING THE NEED FOR ADDSUBVIEWCONTROLLER
 1) when adding a viewportController to a view , simply make the viewportController take on the dimensions and transform of the enclosing view
     - change (or add) the constructor to not take width and height, but just inherit the parent.
     - the viewport is the global opengl viewport so need to recursively find the global coords by traversing up. could use caching to early stop
+
+    this is kind of done. we added the expandable flag, but we don't inherit the transform yet?
 2) also when adding a viewport controller to another viewport controller, use one of the viewports as the enclosing view
     - will need to add another constructor to take the index of which VP to use as the encloser.
 3) will need to make finding the global positions a solid process.
 4) find out exactly when we need to resolve dimensions
 5) add flags to check if resolving is actually needed
+
+SIMPLE VIEWPORTCNTRLR?
+- do we need a simple viewport controller that all views have so that they can embed children? I guess a layout would do that? or layout would be the more advanced version of that much like the current vpcntlr is
+
+SORT OUT resolving size happening more than once. figure out which event it is coming from and only do it once.
