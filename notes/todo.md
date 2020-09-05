@@ -30,7 +30,13 @@ Depth?
  - draw select pass once instead of every mouse move.
  - file menu with special view types for drop downs that store std functions.
  - tree viewer
+ - tab view
+ - slider
+ - button
+ - dialog
+ - label
  - file viewer
+ - for nodes views, they will need a 'border' to be able to select and resize
  - dont store glfw window in UIWindow. UI window shoud be backend agnostic. we should store a map in the controller class since it owns the window and connects everything together
  - glgui should really be an interface to allow sublassing for ANY API
  - glgui in its callback doesn't need to call refresh on the UIWindow directly.
@@ -83,7 +89,22 @@ REMOVING THE NEED FOR ADDSUBVIEWCONTROLLER
 5) add flags to check if resolving is actually needed
 
 SIMPLE VIEWPORTCNTRLR?
+- why not just make UIView the one that does the viewport? then viewport controller is just a type of splitter that has a divider
 - do we need a simple viewport controller that all views have so that they can embed children? I guess a layout would do that? or layout would be the more advanced version of that much like the current vpcntlr is
+- also dont need to make viewportcontroller have 3 views that you parent to? altough that is useful for having a background colour.
+- ultimatley this is all just to get geometry and as long as the hight level views that the user uses are have a nice interface, does it matter how many views we have under hood to magange heirarchy (apart from performance of course)
+- is it as simple as getting the world pos in UIVIew and then before drawing CHILDREN, set the viewport to global coords? drawing itself in viewRect coords its fine because it's assumed that the parent UIView would have set the viewport (like the current one has just done for its children) 
 
 SORT OUT resolving size happening more than once. figure out which event it is coming from and only do it once.
 
+IDEA: have a pool for each type of view that we allocate from, and as we resolve, we sort the views in the pool? OR could switch to variants and use the static vector (or static sparestack?) to put the variants in. then we sort those as we resolve which makes updating them next time much faster possibly 
+
+NOTE: with UIView controlling their own viewport, we won't need the virtual draw functions. UIview::draw *should* be enough for all subclassed object to use directly. they just need to take care of their own local children and WHAT they are as opposed to HOW they draw.
+
+
+
+
+plan next
+1) change global update to so that it happens during resolve and is cached. add a flag to make it known that global update is ready. not known yet if that will be needed.
+2) make UIView control it's own viewport so that it makes it easier to sublass and make custom viewcontrollers (like 'divider/splitter') and (layouts) that just draw in local coords
+3) will we need to change the divider resize global sub views? might just mean we remove the global coords and dont do viewport change in that. all new classes wont need to either!

@@ -212,19 +212,20 @@ UIPoint UIView::getWorldPos() {
 
 void UIView::Draw() {
     glDisable(GL_TEXTURE_2D);
-    glDisable(GL_BLEND);
+    glEnable(GL_BLEND);
 
     if (drawable == true) {
-        /*cout << "drawing " << globalIndexID << " " << text << " "
-             << viewRect.point.x << " " << viewRect.point.y << " "
-             << viewRect.size.width << " " << viewRect.size.height
-             << "\n";*/
+        //cout << "drawing " << globalIndexID << " " << text << " "
+        //     << viewRect.point.x << " " << viewRect.point.y << " "
+        //     << viewRect.size.width << " " << viewRect.size.height
+        //     << "\n";
         glColor4f(viewColour[0], viewColour[1], viewColour[2], viewColour[3]);
         glBegin(GL_POLYGON);
 
         glVertex3f(viewRect.point.x, viewRect.point.y, 1.0);
         glVertex3f(viewRect.point.x + viewRect.size.width, viewRect.point.y,
                    1.0);
+        glColor4f(viewColour[0]*0.5, viewColour[1]*0.5, viewColour[2]*0.5, viewColour[3]);
         glVertex3f(viewRect.point.x + viewRect.size.width,
                    viewRect.point.y + viewRect.size.height, 1.0);
         glVertex3f(viewRect.point.x, viewRect.point.y + viewRect.size.height,

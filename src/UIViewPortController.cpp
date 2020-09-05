@@ -118,16 +118,16 @@ void UIViewPortController::divide(float divPC) {
             1.0 - divPC; // reverse because of opengl y coordinate
 
         if (divider == nullptr) {
-            divider = std::make_unique<UIView>(
-                this, viewRect.size.width, dividerThickness, text + "div");
+            divider = std::make_unique<UIView>(this, viewRect.size.width,
+                                               dividerThickness, text + "div");
             divider->setColour(1.0, 0.5, 0.5, 1.0);
         }
         if (viewRight == nullptr) {
             viewRight = std::make_unique<UIView>(
                 this, 0, 0, text + "bottom"); // create it with no size,
-                                                     // it wil get
+                                              // it wil get
             // resolved later on...
-            //viewRight->setColour(0.5, 0.5, 0.0, 1.0);
+            // viewRight->setColour(0.5, 0.5, 0.0, 1.0);
         }
 
         resolveSize();
@@ -157,42 +157,51 @@ void UIViewPortController::setColour(int pos, float R, float G, float B,
 }
 
 void UIViewPortController::DrawSelectPass() {
-    //cout << "SELECT set viewportx to " << globalRect.point.x << " "
-    //     << globalRect.point.x << " with size " << viewRect.size.width << " "
-    //     << viewRect.size.height << "\n";
-    glViewport(globalRect.point.x, globalRect.point.y, viewRect.size.width,
-               viewRect.size.height);
-    // rootWindow->checkOpenGLError();
-    // cout << "set viewportx to " << globalRect.point.x << "with size " <<
-    // viewRect.size.width << endl;
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
 
-    glOrtho(0.0, viewRect.size.width, 0.0, viewRect.size.height, 1000, -1000);
-    // cout << "set glOrtho sizeX as" << viewRect.size.width << endl;
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    UIView::DrawSelectPassSubViews();
+    for (auto it = children.begin(); it < children.end(); ++it) {
+        // cout << "SELECT set viewportx to " << globalRect.point.x << " "
+        //     << globalRect.point.x << " with size " << viewRect.size.width <<
+        //     " "
+        //     << viewRect.size.height << "\n";
+        glViewport(globalRect.point.x, globalRect.point.y, viewRect.size.width,
+                   viewRect.size.height);
+        // rootWindow->checkOpenGLError();
+        // cout << "set viewportx to " << globalRect.point.x << "with size " <<
+        // viewRect.size.width << endl;
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+
+        glOrtho(0.0, viewRect.size.width, 0.0, viewRect.size.height, 1000,
+                -1000);
+        // cout << "set glOrtho sizeX as" << viewRect.size.width << endl;
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        rootWindow->getNodeFromID(*it)->DrawSelectPass();
+    }
 }
 
 void UIViewPortController::Draw() {
 
-    //cout << "set viewportx to " << globalRect.point.x << " "
-    //     << globalRect.point.x << " with size " << viewRect.size.width << " "
-    //     << viewRect.size.height << "\n";
-    glViewport(globalRect.point.x, globalRect.point.y, viewRect.size.width,
-               viewRect.size.height);
-    // rootWindow->checkOpenGLError();
-    // cout << "set viewportx to " << globalRect.point.x << "with size " <<
-    // viewRect.size.width << endl;
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
+    for (auto it = children.begin(); it < children.end(); ++it) {
 
-    glOrtho(0.0, viewRect.size.width, 0.0, viewRect.size.height, 1000, -1000);
-    // cout << "set glOrtho sizeX as" << viewRect.size.width << endl;
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    UIView::DrawSubViews();
+        //cout << "set viewportx to " << globalRect.point.x << " "
+        //     << globalRect.point.x << " with size " << viewRect.size.width
+        //     << " " << viewRect.size.height << "\n";
+        glViewport(globalRect.point.x, globalRect.point.y, viewRect.size.width,
+                   viewRect.size.height);
+        // rootWindow->checkOpenGLError();
+        // cout << "set viewportx to " << globalRect.point.x << "with size "
+        // << viewRect.size.width << endl;
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+
+        glOrtho(0.0, viewRect.size.width, 0.0, viewRect.size.height, 1000,
+                -1000);
+        // cout << "set glOrtho sizeX as" << viewRect.size.width << endl;
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        rootWindow->getNodeFromID((*it))->Draw();
+    }
 }
 
 UIPoint UIViewPortController::getWorldPos() {
@@ -200,17 +209,18 @@ UIPoint UIViewPortController::getWorldPos() {
 }
 
 void UIViewPortController::
-    resizeGlobalSubViewPorts() // for setting up sizes after division. another
-                               // function takes cares of local resizing from
-                               // mouse (but this might get called as a
-                               // consequence of that other simpler function
+    resizeGlobalSubViewPorts() // for setting up sizes after division.
+                               // another function takes cares of local
+                               // resizing from mouse (but this might get
+                               // called as a consequence of that other
+                               // simpler function
 { // this doesn't need to call resolve size because the
   // caller (vpCntlr::resolveSize) does it
 
     // grab global pos of VPCtlr
     UIPoint globalPosOfParentVPCtlr = getWorldPos();
     globalRect = UIRect{globalPosOfParentVPCtlr, viewRect.size};
-    //cout << "global Pos of VPCTlr " << id() << " is "
+    // cout << "global Pos of VPCTlr " << id() << " is "
     //     << globalPosOfParentVPCtlr.x << " " << globalPosOfParentVPCtlr.y
     //     << "\n";
     float divPositionX = 0;
@@ -222,9 +232,9 @@ void UIViewPortController::
     float finalHeight = viewRect.size.height;
     float finalDividerHeight = viewRect.size.height;
 
-    // only override the needed variables to avoid having to call all functions
-    // in two branches in future, we should make this a templated function or if
-    // constexpr
+    // only override the needed variables to avoid having to call all
+    // functions in two branches in future, we should make this a templated
+    // function or if constexpr
     if (oriented == VERTICAL) {
         finalDividerWidth = dividerThickness;
         divPositionX = std::ceil(viewRect.size.width * divPercentLocation);
@@ -241,7 +251,7 @@ void UIViewPortController::
     { // set it's size to be the VPCtlr viewRect...remember keep VPCtlrs pos
       // 0.0, 0.0....
         viewLeft->setPosition(0.0, 0.0);
-        //cout << "setting left view to " << viewRect.size.width << " "
+        // cout << "setting left view to " << viewRect.size.width << " "
         //     << viewRect.size.height << "\n";
         viewLeft->setSize(viewRect.size.width, viewRect.size.height);
         // viewLeft->setGlobalPosition(globalPosOfParentVPCtlr.x,
@@ -265,8 +275,10 @@ void UIViewPortController::
         viewRight->setPosition(offsetSizeX, offsetSizeY);
         viewRight->setSize(viewRect.size.width - offsetSizeX,
                            viewRect.size.height - offsetSizeY);
-        // viewRight->setGlobalPosition(globalPosOfParentVPCtlr.x + offsetSizeX,
-        //                             globalPosOfParentVPCtlr.y + offsetSizeY);
+        // viewRight->setGlobalPosition(globalPosOfParentVPCtlr.x +
+        // offsetSizeX,
+        //                             globalPosOfParentVPCtlr.y +
+        //                             offsetSizeY);
         // viewRight->resolveSize();
     }
 }
@@ -299,8 +311,8 @@ void UIViewPortController::addSubViewPortController(
     // contructor
 
     if (index == 0) {
-        // format incoming viewportController size so that the viewRect matches
-        // the viewport its going into.
+        // format incoming viewportController size so that the viewRect
+        // matches the viewport its going into.
         viewLeft->addSubView(newView);
     }
 
@@ -312,12 +324,12 @@ void UIViewPortController::addSubViewPortController(
 void UIViewPortController::viewClicked(keyStoreStruct key, int senderID) {
 
     // mouse click for dragging
-    // if sender is less than my viewcount (ie is the caller one of my children)
-    // if odd then its a divider. if even its a sub view that doesnt reaarange.
-    // then store mouse pos and set mousebutton pressed.
+    // if sender is less than my viewcount (ie is the caller one of my
+    // children) if odd then its a divider. if even its a sub view that
+    // doesnt reaarange. then store mouse pos and set mousebutton pressed.
     // cout << "viewport contrler recieved click" << endl;
-    if ((senderID % 2) == 1) // called from divider, use mod incase we want to
-                             // implement multiple divides
+    if ((senderID % 2) == 1) // called from divider, use mod incase we want
+                             // to implement multiple divides
     {
 
         localKeyStore.LMx = key.Mx;
@@ -381,20 +393,20 @@ void UIViewPortController::viewReleased(keyStoreStruct key, int senderID) {
 }
 
 void UIViewPortController::resizeFromDivider(int offsetX, int offsetY) {
-    //cout << "resize from divider  \n";
+    // cout << "resize from divider  \n";
 
     if (oriented == VERTICAL) {
         // cout << " in resizefromdivider. offset is " << offsetX << endl;
         viewLeft->offsetSize(offsetX, 0);
         viewLeft->resolveSize();
-        // viewLeft->offsetGlobalPosition(offsetX, globalPosOfParentVPCtlr.y);
-        // viewLeft->resolveSize();
+        // viewLeft->offsetGlobalPosition(offsetX,
+        // globalPosOfParentVPCtlr.y); viewLeft->resolveSize();
 
         divider->movePosition(offsetX, 0);
         // divider->offsetGlobalPosition(offsetX, 0);
 
-        // dragging down the mouse is negative so we actually increase the right
-        // view (as it is on the top!)
+        // dragging down the mouse is negative so we actually increase the
+        // right view (as it is on the top!)
         viewRight->offsetSize(-1 * offsetX, 0);
         viewRight->movePosition(offsetX, 0);
         viewRight->resolveSize();
@@ -412,6 +424,7 @@ void UIViewPortController::resizeFromDivider(int offsetX, int offsetY) {
         viewRight->movePosition(0.f, static_cast<float>(-offsetY));
         viewRight->resolveSize();
 
-        // viewRight->offsetGlobalPosition(0.f, static_cast<float>(-offsetY));
+        // viewRight->offsetGlobalPosition(0.f,
+        // static_cast<float>(-offsetY));
     }
 }
