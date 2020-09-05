@@ -55,8 +55,8 @@ UIView::UIView(UIView* parentIn, int width, int height, std::string text)
     , childrenDrawable(true)
     , lmbPressed(false)
     , viewColour{1.0, 1.0, 0.0, 1.0}
-    , viewRect{{0.0, 0.0}, {width, height}}
-    , globalRect{{0.0, 0.0}, {0, 0}}
+    , viewRect{{0, 0}, {width, height}}
+    , globalRect{{0, 0}, {0, 0}}
     , registered(false)
     , text(text)
     , expandToFillParent(false)
@@ -168,6 +168,12 @@ void UIView::resolveSize() {
                                // child is a vpcntlr is should know how to embed
     }
 
+    // as we go down resolve global pos
+    UIPoint parentPos = parent->getWorldPos();
+
+    globalRect.point =
+        UIPoint{viewRect.point.x + parentPos.x, viewRect.point.y + parentPos.y};
+
     for (auto& index : children) {
         rootWindow->getNodeFromID(index)->resolveSize();
     }
@@ -193,10 +199,7 @@ UIView* UIView::Parent() {
 UIPoint UIView::getWorldPos() {
     UIPoint tempRect = UIPoint(0.0, 0.0);
 
-    if (!isRootWindow()) // if not window so we stop there....
-    {                    // call recursivly
-        tempRect = Parent()->getWorldPos();
-    }
+
 
     //return UIPoint(std::max(globalRect.point.x, tempRect.x),
     //               std::max(globalRect.point.y, tempRect.y));
@@ -206,8 +209,8 @@ UIPoint UIView::getWorldPos() {
                                    /*UIRect parentRect = parent->getRect();
                                    * */
 
-    return UIPoint(tempRect.x + viewRect.point.x,
-                   tempRect.y + viewRect.point.y);
+    return UIPoint(globalRect.point.x,
+                   globalRect.point.y);
 }
 
 void UIView::Draw() {
