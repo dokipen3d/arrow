@@ -100,6 +100,8 @@ void GLGui::keyCallback(GLFWwindow* window, int key, int scancode, int action,
     // processEvents which is called from app (we could change that
     // from a pull method to a push).
     glfwMakeContextCurrent(window);
+    cout << "boo5\n";
+
     Application::handleEvent(currentWindowID, GLGui::keyStore);
 }
 
@@ -155,7 +157,6 @@ void GLGui::framebuffer_size_callback(GLFWwindow* window, int width,
     // from a pull method to a push).
     glfwMakeContextCurrent(window);
     Application::framebuffer_size_callback(currentWindowID, width, height);
-
     windowResized = true;
 }
 

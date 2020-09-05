@@ -54,8 +54,8 @@ class UIViewPortController : public UIView {
     void setColour(int pos, float R, float G, float B, float A);
     bool m_bDivided;
     // no op as vpcntre doesn't really get drawn. just draws children
-    void DrawSelectPass() override;
-    void Draw() override;
+    //void DrawSelectPass() override;
+    //void Draw() override;
     //int width() override {
     //    return width(0);
     //};

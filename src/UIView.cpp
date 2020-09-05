@@ -162,6 +162,9 @@ void UIView::resolveSize() {
     //     << " from parent " << parent->text << "(" << parent->id() << ") to "
     //     << width() << " " << height()
     //     << "\n";
+
+    //cout << "resolving down\n\n\n";
+
     if (expandToFillParent) {
         viewRect =
             parent->getRect(); // do we need to get world pos here? surely if
@@ -200,7 +203,7 @@ UIPoint UIView::getWorldPos() {
     UIPoint tempRect = UIPoint(0.0, 0.0);
 
 
-
+    //cout << "getting world pos\n\n\n";
     //return UIPoint(std::max(globalRect.point.x, tempRect.x),
     //               std::max(globalRect.point.y, tempRect.y));
     /*UIRect parentRect = parent->getRect();
@@ -218,10 +221,11 @@ void UIView::Draw() {
     glEnable(GL_BLEND);
 
     if (drawable == true) {
-        //cout << "drawing " << globalIndexID << " " << text << " "
-        //     << viewRect.point.x << " " << viewRect.point.y << " "
-        //     << viewRect.size.width << " " << viewRect.size.height
-        //     << "\n";
+
+        /*cout << "drawing " << globalIndexID << " " << text << " "
+             << viewRect.point.x << " " << viewRect.point.y << " "
+             << viewRect.size.width << " " << viewRect.size.height
+             << "\n";*/
         glColor4f(viewColour[0], viewColour[1], viewColour[2], viewColour[3]);
         glBegin(GL_POLYGON);
 
@@ -248,7 +252,37 @@ void UIView::DrawSubViews() {
     // cout << text << " has " << children.size() << " children\n";
 
     for (auto it = children.begin(); it < children.end(); ++it) {
+
+        /*cout << text << " " << id() << " set viewportx to " << globalRect.point.x << " "
+             << globalRect.point.y << " with size " << viewRect.size.width
+             << " " << viewRect.size.height << "\n";*/
+        glViewport(globalRect.point.x, globalRect.point.y, viewRect.size.width,
+                   viewRect.size.height);
+        // rootWindow->checkOpenGLError();
+        // cout << "set viewportx to " << globalRect.point.x << "with size "
+        // << viewRect.size.width << endl;
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+
+        glOrtho(0.0, viewRect.size.width, 0.0, viewRect.size.height, 1000,
+                -1000);
+        // cout << "set glOrtho sizeX as" << viewRect.size.width << endl;
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
         rootWindow->getNodeFromID((*it))->Draw();
+        glViewport(globalRect.point.x, globalRect.point.y, viewRect.size.width,
+                   viewRect.size.height);
+        // rootWindow->checkOpenGLError();
+        // cout << "set viewportx to " << globalRect.point.x << "with size "
+        // << viewRect.size.width << endl;
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+
+        glOrtho(0.0, viewRect.size.width, 0.0, viewRect.size.height, 1000,
+                -1000);
+        // cout << "set glOrtho sizeX as" << viewRect.size.width << endl;
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
     }
 }
 
@@ -280,7 +314,25 @@ void UIView::deRegisterChildren() {
 }
 
 void UIView::DrawSelectPassSubViews() {
+
     for (auto it = children.begin(); it < children.end(); ++it) {
+        // cout << "SELECT set viewportx to " << globalRect.point.x << " "
+        //     << globalRect.point.x << " with size " << viewRect.size.width <<
+        //     " "
+        //     << viewRect.size.height << "\n";
+        glViewport(globalRect.point.x, globalRect.point.y, viewRect.size.width,
+                   viewRect.size.height);
+        // rootWindow->checkOpenGLError();
+        // cout << "set viewportx to " << globalRect.point.x << "with size " <<
+        // viewRect.size.width << endl;
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+
+        glOrtho(0.0, viewRect.size.width, 0.0, viewRect.size.height, 1000,
+                -1000);
+        // cout << "set glOrtho sizeX as" << viewRect.size.width << endl;
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
         rootWindow->getNodeFromID(*it)->DrawSelectPass();
     }
 }

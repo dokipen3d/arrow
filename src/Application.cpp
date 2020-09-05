@@ -70,14 +70,15 @@ void Application::registerView(UIView* newView, bool selfRegister) {
 void Application::forceRefresh(std::size_t id) {
 
     windowstack[id]->ForceRefresh();
-    windowstack[id]->DrawGui();
 
+    windowstack[id]->DrawGui();
+    //cout << "refresh\n";
 }
 
 void Application::framebuffer_size_callback(std::size_t id, int width,
                                             int height) {
 
-    //cout << width << " " << height << "\n";
+    cout << width << " " << height << "\n";
     windowstack[id]->setSize(width, height);
     windowstack[id]->resolveSize();
     //appGui->swapBuffers(id);
@@ -114,19 +115,19 @@ void Application::connectNodes(
 
 void Application::exec() {
 
-    while (bProgramRunning)
+    while (bProgramRunning) {
 
         for (auto i = 0; i < windowstack.size(); ++i) {
-
-            {
+                //cout << "in loop " << i << "\n";
                 appGui->makeWindowContextCurrent(i);
                 // windowstack[i]->resolveSize();
                 windowstack[i]->DrawGui();
                 appGui->swapBuffers(i);
-            }
-            appGui->waitEvents();
+                
             // processEvents();
         }
+        appGui->waitEvents();
+    }
 }
 
 void Application::swapBuffers(std::size_t id) {

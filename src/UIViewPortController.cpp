@@ -25,8 +25,8 @@ UIViewPortController::UIViewPortController(UIView* parent, int width,
     viewLeft =
         std::make_unique<UIView>(this, width, height, text + "_leftView");
     viewLeft->setColour(0.5, 0.0, 0.5, 1.0);
-    expandToFillParent = false;
-    // setDrawable(true);
+    expandToFillParent = true;
+    setDrawable(false);
     // kind of need this in the constructor other wise we dont see the VP being
     // drawn
     resolveSize();
@@ -134,17 +134,29 @@ void UIViewPortController::divide(float divPC) {
     }
 }
 
+UIPoint UIViewPortController::getWorldPos() {
+    return parent->getWorldPos();
+}
+
 void UIViewPortController::resolveSize() {
 
     // set self to be parent viewports viewRect because it might not have been
     // set before
     viewRect = parent->getRect();
+    globalRect.point = parent->getWorldPos();
+
+    /*globalRect.point =
+        UIPoint{viewRect.point.x + parentPos.x, viewRect.point.y + parentPos.y};*/
+
+
     // vpcontrolers always stay 0,0 as they get their worl pos from the parent
     viewRect.point = {0, 0};
     // cout << "resolving VPCNtrol " << id() << " from parent " << parent->id()
     // << " to " << viewRect.size.width << " " << viewRect.size.height << "\n";
     resizeGlobalSubViewPorts();
-    UIView::resolveSize();
+    for (auto& index : children) {
+        rootWindow->getNodeFromID(index)->resolveSize();
+    }
 }
 
 void UIViewPortController::setColour(int pos, float R, float G, float B,
@@ -156,57 +168,20 @@ void UIViewPortController::setColour(int pos, float R, float G, float B,
     }
 }
 
-void UIViewPortController::DrawSelectPass() {
+//void UIViewPortController::DrawSelectPass() {
+//    for (auto it = children.begin(); it < children.end(); ++it) {
+//        rootWindow->getNodeFromID(*it)->DrawSelectPass();
+//    }
+//}
 
-    for (auto it = children.begin(); it < children.end(); ++it) {
-        // cout << "SELECT set viewportx to " << globalRect.point.x << " "
-        //     << globalRect.point.x << " with size " << viewRect.size.width <<
-        //     " "
-        //     << viewRect.size.height << "\n";
-        glViewport(globalRect.point.x, globalRect.point.y, viewRect.size.width,
-                   viewRect.size.height);
-        // rootWindow->checkOpenGLError();
-        // cout << "set viewportx to " << globalRect.point.x << "with size " <<
-        // viewRect.size.width << endl;
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
+//void UIViewPortController::Draw() {
+//
+//    for (auto it = children.begin(); it < children.end(); ++it) {
+//        rootWindow->getNodeFromID((*it))->Draw();
+//    }
+//}
 
-        glOrtho(0.0, viewRect.size.width, 0.0, viewRect.size.height, 1000,
-                -1000);
-        // cout << "set glOrtho sizeX as" << viewRect.size.width << endl;
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        rootWindow->getNodeFromID(*it)->DrawSelectPass();
-    }
-}
 
-void UIViewPortController::Draw() {
-
-    for (auto it = children.begin(); it < children.end(); ++it) {
-
-        //cout << "set viewportx to " << globalRect.point.x << " "
-        //     << globalRect.point.x << " with size " << viewRect.size.width
-        //     << " " << viewRect.size.height << "\n";
-        glViewport(globalRect.point.x, globalRect.point.y, viewRect.size.width,
-                   viewRect.size.height);
-        // rootWindow->checkOpenGLError();
-        // cout << "set viewportx to " << globalRect.point.x << "with size "
-        // << viewRect.size.width << endl;
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-
-        glOrtho(0.0, viewRect.size.width, 0.0, viewRect.size.height, 1000,
-                -1000);
-        // cout << "set glOrtho sizeX as" << viewRect.size.width << endl;
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        rootWindow->getNodeFromID((*it))->Draw();
-    }
-}
-
-UIPoint UIViewPortController::getWorldPos() {
-    return parent->getWorldPos();
-}
 
 void UIViewPortController::
     resizeGlobalSubViewPorts() // for setting up sizes after division.
@@ -218,8 +193,8 @@ void UIViewPortController::
   // caller (vpCntlr::resolveSize) does it
 
     // grab global pos of VPCtlr
-    UIPoint globalPosOfParentVPCtlr = getWorldPos();
-    globalRect = UIRect{globalPosOfParentVPCtlr, viewRect.size};
+   // UIPoint globalPosOfParentVPCtlr = getWorldPos();
+    //globalRect = UIRect{globalPosOfParentVPCtlr, viewRect.size};
     // cout << "global Pos of VPCTlr " << id() << " is "
     //     << globalPosOfParentVPCtlr.x << " " << globalPosOfParentVPCtlr.y
     //     << "\n";
