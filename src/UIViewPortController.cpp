@@ -138,6 +138,18 @@ UIPoint UIViewPortController::getWorldPos() {
     return parent->getWorldPos();
 }
 
+void UIViewPortController::resetViewport() {
+    parent->resetViewport();
+}
+
+void UIViewPortController::resetViewportBegin() {
+    parent->resetViewportBegin();
+}
+
+void UIViewPortController::resetViewportEnd() {
+    parent->resetViewportEnd();
+}
+
 void UIViewPortController::resolveSize() {
 
     // set self to be parent viewports viewRect because it might not have been

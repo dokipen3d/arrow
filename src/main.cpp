@@ -50,10 +50,12 @@ int main(int argc, char* argv[]) {
     testCntlr2->divide(0.4);
     testCntlr2->setColour(0, 0.4, 0.1, 0.7, 1.0);
     testCntlr2->setColour(1, 0.1, 0.9, 0.4, 1.0);
-    // UIViewPortController* testCntlr3 = new
-    // UIViewPortController(vpCntlr.get(), 0.0, 0.0, HORIZONTAL);
-    // testCntlr2->addSubViewPortController(testCntlr3, 1);
-    // testCntlr3->divide(0.5);
+
+    //auto testCntlr3 = std::make_unique<UIViewPortController>(
+    //    testCntlr2.get(), 0, VERTICAL, "vpNew3");
+    //testCntlr3->divide(0.4);
+    //testCntlr3->setColour(0, 0.4, 0.1, 0.7, 1.0);
+    //testCntlr3->setColour(1, 0.1, 0.9, 0.4, 1.0);
 
     //auto testCntlr3 = std::make_unique<UIViewPortController>(
     //    testCntlr2.get(), 1, VERTICAL, "vpNew3");

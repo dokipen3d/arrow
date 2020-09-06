@@ -135,6 +135,44 @@ void UIView::removeFromChildren(std::size_t localId) {
     }
 }
 
+void UIView::resetViewport() {
+
+
+        cout << text << " " << id() << " set viewportx to "
+             << globalRect.point.x << " " << globalRect.point.y << " with size "
+             << viewRect.size.width << " " << viewRect.size.height << "\n";
+
+        glViewport(globalRect.point.x, globalRect.point.y, viewRect.size.width,
+                   viewRect.size.height);
+        // rootWindow->checkOpenGLError();
+        // cout << "set viewportx to " << globalRect.point.x << "with size "
+        // << viewRect.size.width << endl;
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+
+        glOrtho(0.0, viewRect.size.width, 0.0, viewRect.size.height, 1000,
+                -1000);
+        // cout << "set glOrtho sizeX as" << viewRect.size.width << endl;
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+    
+
+}
+
+void UIView::resetViewportBegin() {
+    if (bViewportNeedsUpdating) {
+        resetViewport();
+        bViewportNeedsUpdating = false;
+    }
+}
+
+void UIView::resetViewportEnd() {
+    if (!bViewportNeedsUpdating) {
+        resetViewport();
+        bViewportNeedsUpdating = true;
+    }
+}
+
 void UIView::setExpandable(bool expandable) {
     expandToFillParent = true;
 }
@@ -220,19 +258,24 @@ void UIView::Draw() {
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
 
+    parent->resetViewportBegin();
+
     if (drawable == true) {
 
-        /*cout << "drawing " << globalIndexID << " " << text << " "
+
+        
+
+        cout << "drawing " << globalIndexID << " " << text << " "
              << viewRect.point.x << " " << viewRect.point.y << " "
-             << viewRect.size.width << " " << viewRect.size.height
-             << "\n";*/
+             << viewRect.size.width << " " << viewRect.size.height << "\n";
         glColor4f(viewColour[0], viewColour[1], viewColour[2], viewColour[3]);
         glBegin(GL_POLYGON);
 
         glVertex3f(viewRect.point.x, viewRect.point.y, 1.0);
         glVertex3f(viewRect.point.x + viewRect.size.width, viewRect.point.y,
                    1.0);
-        glColor4f(viewColour[0]*0.5, viewColour[1]*0.5, viewColour[2]*0.5, viewColour[3]);
+        glColor4f(viewColour[0] * 0.5, viewColour[1] * 0.5, viewColour[2] * 0.5,
+                  viewColour[3]);
         glVertex3f(viewRect.point.x + viewRect.size.width,
                    viewRect.point.y + viewRect.size.height, 1.0);
         glVertex3f(viewRect.point.x, viewRect.point.y + viewRect.size.height,
@@ -242,9 +285,13 @@ void UIView::Draw() {
         // rootWindow->textEngine->render_text("view is the\n best", 0.0,
         // 0.0, 1.0, 1.0);
     }
-
     if (childrenDrawable == true && viewCount() > 0) {
         DrawSubViews();
+    }
+    //only reset if we had to draw children because if we didn't then viewport wasn't changed!
+    if (viewCount() > 0) {
+        parent->resetViewportEnd();
+
     }
 }
 
@@ -253,36 +300,9 @@ void UIView::DrawSubViews() {
 
     for (auto it = children.begin(); it < children.end(); ++it) {
 
-        /*cout << text << " " << id() << " set viewportx to " << globalRect.point.x << " "
-             << globalRect.point.y << " with size " << viewRect.size.width
-             << " " << viewRect.size.height << "\n";*/
-        glViewport(globalRect.point.x, globalRect.point.y, viewRect.size.width,
-                   viewRect.size.height);
-        // rootWindow->checkOpenGLError();
-        // cout << "set viewportx to " << globalRect.point.x << "with size "
-        // << viewRect.size.width << endl;
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-
-        glOrtho(0.0, viewRect.size.width, 0.0, viewRect.size.height, 1000,
-                -1000);
-        // cout << "set glOrtho sizeX as" << viewRect.size.width << endl;
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
+ 
         rootWindow->getNodeFromID((*it))->Draw();
-        glViewport(globalRect.point.x, globalRect.point.y, viewRect.size.width,
-                   viewRect.size.height);
-        // rootWindow->checkOpenGLError();
-        // cout << "set viewportx to " << globalRect.point.x << "with size "
-        // << viewRect.size.width << endl;
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
 
-        glOrtho(0.0, viewRect.size.width, 0.0, viewRect.size.height, 1000,
-                -1000);
-        // cout << "set glOrtho sizeX as" << viewRect.size.width << endl;
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
     }
 }
 

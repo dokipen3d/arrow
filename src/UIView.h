@@ -85,6 +85,14 @@ class UIView {
     void deRegisterChildren();
     bool isRootWindow();
     void removeFromChildren(std::size_t id);
+    virtual void resetViewport();
+ 
+
+
+    virtual void resetViewportBegin();
+    virtual void resetViewportEnd();
+
+    bool bViewportNeedsUpdating = true;
     std::string text;
     virtual int width() {
         return viewRect.size.width;
