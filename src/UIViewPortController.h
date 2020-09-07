@@ -63,7 +63,7 @@ class UIViewPortController : public UIView {
     //    return height(0);
     //};
     // pass through
-    UIPoint getWorldPos() override;
+    //UIPoint getWorldPos() override;
     void resetViewport() override;
     void resetViewportBegin() override;
     void resetViewportEnd() override;

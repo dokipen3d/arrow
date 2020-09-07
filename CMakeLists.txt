@@ -40,5 +40,6 @@ target_link_libraries(${PROJECT_NAME}
                       PRIVATE 
                       freetype 
                       glfw
-                      GLEW::GLEW 
+                      GLEW::GLEW
+                      glm
                       ${OPENGL_LIBRARIES})

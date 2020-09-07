@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <memory>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 using namespace std;
@@ -12,6 +13,8 @@ using namespace std;
 class UIWindow;
 class Node;
 struct keyStoreStruct;
+
+using UIPoint2 = UIPoint;
 
 class UIView {
 
@@ -77,7 +80,21 @@ class UIView {
     void setChildrenDrawable(bool areChildrenDrawable);
     void setColour(GLfloat R, GLfloat G, GLfloat B, GLfloat A);
     UIView* Parent();
-    virtual UIPoint getWorldPos();
+
+   
+
+
+
+    UIPoint getWorldPos();
+    
+
+   
+
+
+    
+
+
+
     std::size_t id();
     void setId(std::size_t id);
     void setLocalId(std::size_t id);
@@ -86,8 +103,6 @@ class UIView {
     bool isRootWindow();
     void removeFromChildren(std::size_t id);
     virtual void resetViewport();
- 
-
 
     virtual void resetViewportBegin();
     virtual void resetViewportEnd();

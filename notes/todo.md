@@ -59,6 +59,14 @@ Depth?
  - if moving the loop out of the window itself and into the controller (like qt application), then we need a way to swapbuffers and pollevents without knowing the type of windows lib. how do we pass window to glgui to tell it which one? the glgui will have to store its own id to glfwwindow stack. the ids that are in the controller will have to be in sync. we will also need to provide an interface for polling and waiting.
 
 
+ expressions 2.0 notes
+ - multi line with if() else if
+
+
+
+ https://stackoverflow.com/questions/171301/whats-the-fastest-way-to-divide-an-integer-by-3
+
+
 any glfwgui backend class NEEDS to
  - call app->setSize(int windowID, width, height);
  - call app->refresh(int windowID)
@@ -101,10 +109,19 @@ IDEA: have a pool for each type of view that we allocate from, and as we resolve
 
 NOTE: with UIView controlling their own viewport, we won't need the virtual draw functions. UIview::draw *should* be enough for all subclassed object to use directly. they just need to take care of their own local children and WHAT they are as opposed to HOW they draw.
 
-
+IDEA: make the UIRect class a static vector of UI Rects (or two vectors of points and sizes). Then when we resolve, we update the vector using the position to index into it. THEN we already have our data ready to upload to opengl to instance. for text, is each individual character a view? prob overkill. maybe jsut have each view (or text based subclass) store its own text rect buffer
 
 
 plan next
 1) change global update to so that it happens during resolve and is cached. add a flag to make it known that global update is ready. not known yet if that will be needed.
 2) make UIView control it's own viewport so that it makes it easier to sublass and make custom viewcontrollers (like 'divider/splitter') and (layouts) that just draw in local coords
 3) will we need to change the divider resize global sub views? might just mean we remove the global coords and dont do viewport change in that. all new classes wont need to either!
+
+
+sending to GPU:
+ultimately, can get a rect defined as a
+    - central position (1 float)
+    - a 2d scale        (2 floats)
+    - a depth           (1 float)
+
+    instead of depth, it colour be a colour index which doubles as a texture index. send UI colours as a 32 col buffer amd of its greater than 32, then use it to index into a texture sampler 

@@ -134,9 +134,9 @@ void UIViewPortController::divide(float divPC) {
     }
 }
 
-UIPoint UIViewPortController::getWorldPos() {
-    return parent->getWorldPos();
-}
+//UIPoint UIViewPortController::getWorldPos() {
+//    return parent->getWorldPos();
+//}
 
 void UIViewPortController::resetViewport() {
     parent->resetViewport();
@@ -247,6 +247,7 @@ void UIViewPortController::
         // viewLeft->resolveSize();
 
     } else if (children.size() == 3) {
+        //cout << "resizing divider \n";
         // viewLeft->setColour(0.5, 0.0, 0.5, 1.0);
         viewLeft->setPosition(0.0, 0.0);
         viewLeft->setSize(finalWidth, finalHeight);
@@ -343,9 +344,8 @@ void UIViewPortController::viewDragged(keyStoreStruct key, int senderID) {
             // cout << " in VP dragged" << endl;
             // cout << localKeyStore.LMy << endl;
             localKeyStore.My = key.My;
-            // cout << localKeyStore.My << endl;
+            //cout << localKeyStore.My << endl;
             int offset = localKeyStore.My - localKeyStore.LMy;
-            // cout << "offset is " << offset << endl;
             localKeyStore.LMy = key.My;
             resizeFromDivider(0, offset);
         }
@@ -386,11 +386,10 @@ void UIViewPortController::resizeFromDivider(int offsetX, int offsetY) {
         // cout << " in resizefromdivider. offset is " << offsetX << endl;
         viewLeft->offsetSize(offsetX, 0);
         viewLeft->resolveSize();
-        // viewLeft->offsetGlobalPosition(offsetX,
-        // globalPosOfParentVPCtlr.y); viewLeft->resolveSize();
+
 
         divider->movePosition(offsetX, 0);
-        // divider->offsetGlobalPosition(offsetX, 0);
+        divider->resolveSize();
 
         // dragging down the mouse is negative so we actually increase the
         // right view (as it is on the top!)
@@ -405,13 +404,12 @@ void UIViewPortController::resizeFromDivider(int offsetX, int offsetY) {
         viewLeft->resolveSize();
 
         divider->movePosition(0, -offsetY);
+        divider->resolveSize();
         // divider->offsetGlobalPosition(0, -offsetY);
 
         viewRight->offsetSize(0.f, static_cast<float>(offsetY));
         viewRight->movePosition(0.f, static_cast<float>(-offsetY));
         viewRight->resolveSize();
 
-        // viewRight->offsetGlobalPosition(0.f,
-        // static_cast<float>(-offsetY));
     }
 }

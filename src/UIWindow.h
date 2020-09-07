@@ -18,6 +18,14 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+
+
+
+
 using namespace std;
 
 // base class
@@ -41,7 +49,6 @@ private:
     int returnViewCount();
     int selectedViewID;
     
-  
 
     frustrumStruct frustrum;
 
@@ -52,6 +59,14 @@ private:
     GLFWwindow* window;
     ShaderObject* windowShader;
 
+    unsigned int VAO;
+    unsigned int VBO;
+    unsigned int CBO;
+    unsigned int SBO;
+
+    GLuint mProgramID; // shader id
+
+
 public:
     UIWindow(int width, int height, std::string windowTitle = {} );
 
@@ -59,14 +74,24 @@ public:
     ~UIWindow();
 
     void checkOpenGLError();
+    std::vector<UIColour> rectPoints;
+    std::vector<UIColour> colours;
+    std::vector<UIColour> selectColours;
+
+
 
 
     void ResizeWindow(int width,
         int height); // GLGui will call this after it handles event.
 
     float scaleFactor = 1.0f;
+    float currentDepth = 0;
+    
 
     void DrawGui();
+    void updateGLBuffersAndDraw();
+
+    void drawImmediate();
     void ForceRefresh();
     int id();
 
@@ -97,6 +122,7 @@ public:
     void setHandler(GLGui* eventHandlerPassThrough);
 
     int nodeIDUnderMousePos(keyStoreStruct key);
+    int dragSkip = 0;
 
     void resetViewport();
 
@@ -105,6 +131,54 @@ public:
     bool programRunning;
     // assigned in application. used to make context current
     int rootID;
+
+
+    void printShaderLog(GLuint shader) {
+        // Make sure name is shader
+        if (glIsShader(shader)) {
+            // Shader log length
+            int infoLogLength = 0;
+            int maxLength = infoLogLength;
+
+            // Get info string length
+            glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+
+            // Allocate string
+            char* infoLog = new char[maxLength];
+
+            // Get info log
+            glGetShaderInfoLog(shader, maxLength, &infoLogLength, infoLog);
+            if (infoLogLength > 0) {
+                // Print Log
+                printf("%s\n", infoLog);
+            }
+            // Deallocate string
+            delete[] infoLog;
+        } else {
+            printf("Name %d is not a shader\n", shader);
+        }
+    }
+
+    void CheckGLError(std::string str) {
+        GLenum error = glGetError();
+        if (error != GL_NO_ERROR) {
+            printf("Error! %s %s\n", str.c_str(), gluErrorString(error));
+        }
+    }
+
+    bool checkShader(GLuint shaderIn, string shaderName) {
+        glCompileShader(shaderIn);
+        // Check fragment shader for errors
+        GLint fShaderCompiled = GL_FALSE;
+        glGetShaderiv(shaderIn, GL_COMPILE_STATUS, &fShaderCompiled);
+        if (fShaderCompiled != GL_TRUE) {
+            cout << "Unable to compile " << shaderName << " shader " << shaderIn
+                 << "\n";
+            printShaderLog(shaderIn);
+            return false;
+        }
+        CheckGLError("shaders compiled");
+    }
 };
 
 

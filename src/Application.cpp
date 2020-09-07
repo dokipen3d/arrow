@@ -70,9 +70,6 @@ void Application::registerView(UIView* newView, bool selfRegister) {
 void Application::forceRefresh(std::size_t id) {
 
     windowstack[id]->ForceRefresh();
-
-    windowstack[id]->DrawGui();
-    //cout << "refresh\n";
 }
 
 void Application::framebuffer_size_callback(std::size_t id, int width,

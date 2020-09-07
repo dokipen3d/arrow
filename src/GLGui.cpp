@@ -25,8 +25,8 @@ GLGui::GLGui() {
     }
     windowResized = false;
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
     glfwSwapInterval(1);
 }
 
@@ -165,7 +165,6 @@ void GLGui::window_refresh_callback(GLFWwindow* window) {
     std::size_t currentWindowID =
         reinterpret_cast<int>(glfwGetWindowUserPointer(window));
     Application::forceRefresh(currentWindowID);
-    glfwSwapBuffers(window);
 }
 
 void GLGui::refresh() {
