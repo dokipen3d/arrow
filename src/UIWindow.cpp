@@ -106,16 +106,16 @@ void UIWindow::DrawGui()
 
 UIWindow::~UIWindow()
 {
-    cout << "in UIWindow destructor" << endl;
-    for (auto x : vUIViewGlobalStore) {
-        if ((x != NULL) && (x->globalIndexID != 0)) {
-            cout << "deleting remaining UIView in global vector as a memory cleanup. "
-                    "lets hope you saved!"
-                 << endl;
-            delete x;
-        }
-    }
-    // delete vpCntlr;
+   cout << "in UIWindow destructor" << endl;
+   for (auto x : vUIViewGlobalStore) {
+       if ((x != NULL) && (x->globalIndexID != 0)) {
+           cout << "deleting remaining UIView in global vector as a memory cleanup. "
+                   "lets hope you saved!"
+                << endl;
+           delete x;
+       }
+   }
+  // delete vpCntlr;
 }
 
 int UIWindow::id()

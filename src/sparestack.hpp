@@ -13,20 +13,20 @@ public:
     }
 
     // returns the position the item was inserted into
-    template <typename T, typename Callable>
-    std::size_t push(T&& in, const Callable& callable)
+    template <typename Ty, typename Callable>
+    std::size_t push(Ty&& in, const Callable& callable)
     {
         if (spareIds.size() == 0) {
 
-            _data.push_back(std::forward<T>(in));
+            _data.push_back(std::forward<Ty>(in));
             return _data.size()-1;
         } else {
 
             int accessElement = spareIds.front();
 
-            _data.at(accessElement - 1) = std::forward<T>(in);
+            _data.at(accessElement - 1) = std::forward<Ty>(in);
             spareIds.pop_back();
-            callable(accessElement - 1, std::forward<T>(in));
+            callable(accessElement - 1, std::forward<Ty>(in));
             return accessElement - 1;
         }
     }
@@ -48,10 +48,10 @@ public:
         }
     }
 
-    template <typename T>
-    std::size_t push(T&& in)
+    template <typename Ty>
+    std::size_t push(Ty&& in)
     {
-        return push(std::forward<T>(in), [](auto a, auto b) { return; });
+        return push(std::forward<Ty>(in), [](auto a, auto b) { return; });
     }
 
     T& operator[](int idx)

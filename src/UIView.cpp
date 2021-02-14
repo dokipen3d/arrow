@@ -93,6 +93,8 @@ UIView::UIView(UIView* parentIn, int width, int height, std::string text)
     }
 }
 
+//UIView::UIView(const UIView& uiview) = default;
+
 std::size_t UIView::id() {
     return globalIndexID;
 }

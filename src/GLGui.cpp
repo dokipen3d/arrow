@@ -95,7 +95,7 @@ void GLGui::keyCallback(GLFWwindow* window, int key, int scancode, int action,
     GLGui::keyStore.key = key;
     GLGui::keyStore.keyActionStore = action;
     std::size_t currentWindowID =
-        reinterpret_cast<int>(glfwGetWindowUserPointer(window));
+        reinterpret_cast<int64_t>(glfwGetWindowUserPointer(window));
     // we know the window so can call this directly as opposed to
     // processEvents which is called from app (we could change that
     // from a pull method to a push).
@@ -112,7 +112,7 @@ void GLGui::MouseButtonCallback(
     GLGui::keyStore.buttonStore = button;
     GLGui::keyStore.mouseActionStore = action;
     std::size_t currentWindowID =
-        reinterpret_cast<int>(glfwGetWindowUserPointer(window));
+        reinterpret_cast<int64_t>(glfwGetWindowUserPointer(window));
     // we know the window so can call this directly as opposed to
     // processEvents which is called from app (we could change that
     // from a pull method to a push).
@@ -124,7 +124,7 @@ void GLGui::MousePosCallback(GLFWwindow* window, double xpos, double ypos) {
     GLGui::currentEventWindow = window;
     GLGui::keyStore.Mx = xpos;
     GLGui::keyStore.My = ypos;
-    std::size_t currentWindowID = reinterpret_cast<int>(
+    std::size_t currentWindowID = reinterpret_cast<int64_t>(
         glfwGetWindowUserPointer(GLGui::currentEventWindow));
 
     // we have to set the current window context, because when an event occurs,
@@ -135,7 +135,7 @@ void GLGui::MousePosCallback(GLFWwindow* window, double xpos, double ypos) {
 
 void GLGui::processEvents() { // called in main loop and forwards events to
                               // windows for further handling
-    std::size_t currentWindowID = reinterpret_cast<int>(
+    std::size_t currentWindowID = reinterpret_cast<int64_t>(
         glfwGetWindowUserPointer(GLGui::currentEventWindow));
 
     // we have to set the current window context, because when an event occurs,
@@ -149,7 +149,7 @@ void GLGui::framebuffer_size_callback(GLFWwindow* window, int width,
     GLGui::windowRect.size.width = width;
     GLGui::windowRect.size.height = height;
     std::size_t currentWindowID =
-        reinterpret_cast<int>(glfwGetWindowUserPointer(window));
+        reinterpret_cast<int64_t>(glfwGetWindowUserPointer(window));
     // we know the window so can call this directly as opposed to
     // processEvents which is called from app (we could change that
     // from a pull method to a push).
@@ -162,7 +162,7 @@ void GLGui::framebuffer_size_callback(GLFWwindow* window, int width,
 // to get around calling non static functions glfw lets us store pointers
 void GLGui::window_refresh_callback(GLFWwindow* window) {
     std::size_t currentWindowID =
-        reinterpret_cast<int>(glfwGetWindowUserPointer(window));
+        reinterpret_cast<int64_t>(glfwGetWindowUserPointer(window));
     Application::forceRefresh(currentWindowID);
     glfwSwapBuffers(window);
 }
