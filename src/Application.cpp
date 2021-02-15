@@ -114,6 +114,9 @@ void Application::exec() {
 
     while (bProgramRunning) {
 
+       
+        auto NOWA = std::chrono::steady_clock::now();
+
         for (auto i = 0; i < windowstack.size(); ++i) {
                 //cout << "in loop " << i << "\n";
                 appGui->makeWindowContextCurrent(i);
@@ -123,7 +126,14 @@ void Application::exec() {
                 
             // processEvents();
         }
+
+        
         appGui->waitEvents();
+        auto NOWB = std::chrono::steady_clock::now();
+        chrono::duration<double, std::milli> fp_ms = NOWB - NOWA;
+        auto counted =
+            chrono::duration_cast<std::chrono::milliseconds>(fp_ms).count();
+        cout << "counted " << fp_ms.count() << "\n";
     }
 }
 

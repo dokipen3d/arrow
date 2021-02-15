@@ -153,10 +153,10 @@ UIWindow::UIWindow(int width, int height, std::string windowTitle)
 
 void UIWindow::ForceRefresh() {
     
-    if ( dragSkip == 0) {
-        cout << "refreshed \n";
+    //if ( dragSkip == 0) {
+        //cout << "refreshed \n";
         DrawGui();
-    }
+    //}
     
 
 }
@@ -255,7 +255,7 @@ void UIWindow::updateGLBuffersAndDraw() {
 
     resetViewport();
     CheckGLError(" just reset");
-    cout << rectPoints.size() << "\n";
+    //cout << rectPoints.size() << "\n";
     glDrawArrays(GL_TRIANGLES, 0, rectPoints.size());
     CheckGLError("drew");
 }
@@ -355,9 +355,9 @@ void UIWindow::handleEvent(keyStoreStruct key) {
             if (lmbPressed == true) // DRAG
             {
                 //cout << "dragging \n"; 
-                if (dragSkip == 0) {
+                //if (dragSkip == 0) {
                     mUiViews[selectedViewID]->viewDragged(key, 0);
-                }
+                //}
                 dragSkip++;
                 dragSkip = dragSkip % 3;
             }

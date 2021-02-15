@@ -17,6 +17,8 @@ int globalViewCount;
 bool GLGui::windowResized;
 bool GLGui::firstWindowCreated(false);
 GLFWwindow* GLGui::currentEventWindow;
+std::chrono::steady_clock::time_point GLGui::last;
+bool GLGui::ready(true);
 
 GLGui::GLGui() {
 
@@ -27,7 +29,7 @@ GLGui::GLGui() {
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
 }
 
 GLGui::~GLGui() {
@@ -89,6 +91,10 @@ void GLGui::waitEvents() {
     glfwWaitEvents();
 }
 
+void GLGui::waitEventsTimeout(double timeout) {
+    glfwWaitEventsTimeout(timeout);
+}
+
 void GLGui::keyCallback(GLFWwindow* window, int key, int scancode, int action,
                         int mods) {
     GLGui::currentEventWindow = window;
@@ -119,7 +125,21 @@ void GLGui::MouseButtonCallback(
     // processEvents which is called from app (we could change that
     // from a pull method to a push).
     glfwMakeContextCurrent(window);
+
+    auto NOW = std::chrono::steady_clock::now();
+    chrono::duration<double, std::milli> fp_ms = NOW - last;
+    auto counted =
+        chrono::duration_cast<std::chrono::milliseconds>(fp_ms).count();
+    if (counted < 16) {
+        ready = false;
+        return;
+    } else {
+
+        ready = true;
+    }
+
     Application::handleEvent(currentWindowID, GLGui::keyStore);
+    last = std::chrono::steady_clock::now();
 }
 
 void GLGui::MousePosCallback(GLFWwindow* window, double xpos, double ypos) {
@@ -132,7 +152,19 @@ void GLGui::MousePosCallback(GLFWwindow* window, double xpos, double ypos) {
     // we have to set the current window context, because when an event occurs,
     // it might not be in the right window loop (they can occur anytime
     glfwMakeContextCurrent(window);
+    auto NOW = std::chrono::steady_clock::now();
+    chrono::duration<double, std::milli> fp_ms = NOW - last;
+    auto counted =
+        chrono::duration_cast<std::chrono::milliseconds>(fp_ms).count();
+    if (counted < 16) {
+        ready = false;
+        return;
+    } else {
+
+        ready = true;
+    }
     Application::handleEvent(currentWindowID, GLGui::keyStore);
+    last = std::chrono::steady_clock::now();
 }
 
 void GLGui::processEvents() { // called in main loop and forwards events to
@@ -164,7 +196,18 @@ void GLGui::framebuffer_size_callback(GLFWwindow* window, int width,
 void GLGui::window_refresh_callback(GLFWwindow* window) {
     std::size_t currentWindowID =
         reinterpret_cast<int>(glfwGetWindowUserPointer(window));
+    auto NOW = std::chrono::steady_clock::now();
+    chrono::duration<double, std::milli> fp_ms = NOW - last;
+    auto counted =
+        chrono::duration_cast<std::chrono::milliseconds>(fp_ms).count();
+    if (counted < 16) {
+        ready = false;
+        return;
+    } else {
+        ready = true;
+    }
     Application::forceRefresh(currentWindowID);
+    last = std::chrono::steady_clock::now();
 }
 
 void GLGui::refresh() {

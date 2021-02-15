@@ -8,6 +8,7 @@
 #include <vector>
 #include "PlugTypes.h"
 #include "sparestack.hpp"
+#include <chrono>
 
 #define GLFW_INCLUDE_GLU
 
@@ -26,6 +27,7 @@ private:
     static GLFWwindow* currentEventWindow;
 
     sparestack<GLFWwindow*> glfwWindows;
+    static std::chrono::steady_clock::time_point last;
 
 
 
@@ -36,6 +38,7 @@ public:
 
     static keyStoreStruct keyStore;
     static UIRect windowRect;
+    static bool ready;
 
     // a flag to make sure we only resize one call at a time.
     static bool windowResized;
@@ -44,6 +47,7 @@ public:
     void CloseGUI(int return_code);
     void processEvents();//called in main loop and checkes key presses to maniuplate drawing of ui and perform functions. IE. interface!
     void addWindow(UIWindow *window);
+    
     //GUI view stuff........
 
     // create a window and set it's user pointer to the int value given. doesn't need to get value back as it is up to application/UIWindow to destroy the windows with the ids
@@ -53,6 +57,8 @@ public:
     void makeWindowContextCurrent(std::size_t id);
     void swapBuffers(std::size_t id);
     void waitEvents();
+    void waitEventsTimeout(double timeout);
+
 
 
 
