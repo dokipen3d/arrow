@@ -4,3 +4,4 @@ CMakeLists.txt.user
 .vscode/*
 .vs/
 CMakeSettings.json
+.DS_Store
