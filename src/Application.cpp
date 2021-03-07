@@ -78,7 +78,7 @@ void Application::framebuffer_size_callback(std::size_t id, int width,
     cout << width << " " << height << "\n";
     windowstack[id]->setSize(width, height);
     windowstack[id]->resolveSize();
-    //appGui->swapBuffers(id);
+    appGui->swapBuffers(id);
 
 }
 

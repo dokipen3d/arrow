@@ -33,33 +33,33 @@ int main(int argc, char* argv[]) {
     vpCntlr->setColour(1, 0.1, 0.2, 0.1, 1.0);
 
 
-    // //auto view2 = std::make_unique<UIView>(nullptr, 1280, 768, "another_window?");
+    //auto view2 = std::make_unique<UIView>(nullptr, 1280, 768, "another_window?");
 
-    // ////cout << "about to create 2nd UIVPC" << std::endl;
+    ////cout << "about to create 2nd UIVPC" << std::endl;
 
-    // auto testCntlr = std::make_unique<UIViewPortController>(vpCntlr.get(), 0,
-    //                                                         VERTICAL, "vpNew");
-    // testCntlr->divide(0.5);
-    // testCntlr->setColour(0, 0.8, 0.4, 0.3, 1.0);
-    // testCntlr->setColour(1, 0.2, 0.2, 0.8, 1.0);
+    auto testCntlr = std::make_unique<UIViewPortController>(vpCntlr.get(), 0,
+                                                            VERTICAL, "vpNew");
+    testCntlr->divide(0.5);
+    testCntlr->setColour(0, 0.8, 0.4, 0.3, 1.0);
+    testCntlr->setColour(1, 0.2, 0.2, 0.8, 1.0);
 
-    // // auto window3 = std::make_unique<UIWindow>(2000, 320, "odd one");
+    // auto window3 = std::make_unique<UIWindow>(2000, 320, "odd one");
 
-    // auto testCntlr2 = std::make_unique<UIViewPortController>(
-    //     testCntlr.get(), 1, HORIZONTAL, "vpNew2");
-    // testCntlr2->divide(0.4);
-    // testCntlr2->setColour(0, 0.4, 0.1, 0.7, 1.0);
-    // testCntlr2->setColour(1, 0.1, 0.9, 0.4, 1.0);
+    auto testCntlr2 = std::make_unique<UIViewPortController>(
+        testCntlr.get(), 1, HORIZONTAL, "vpNew2");
+    testCntlr2->divide(0.4);
+    testCntlr2->setColour(0, 0.4, 0.1, 0.7, 1.0);
+    testCntlr2->setColour(1, 0.1, 0.9, 0.4, 1.0);
 
-    // auto testCntlr3 = std::make_unique<UIViewPortController>(
-    //     testCntlr2.get(), 0, VERTICAL, "vpNew3");
-    // testCntlr3->divide(0.2);
-    // testCntlr3->setColour(0, 0.4, 0.5, 0.2, 1.0);
-    // testCntlr3->setColour(1, 0.1, 0.1, 0.4, 1.0);
+    auto testCntlr3 = std::make_unique<UIViewPortController>(
+        testCntlr2.get(), 0, VERTICAL, "vpNew3");
+    testCntlr3->divide(0.2);
+    testCntlr3->setColour(0, 0.4, 0.5, 0.2, 1.0);
+    testCntlr3->setColour(1, 0.1, 0.1, 0.4, 1.0);
 
-    // auto testCntlr4 = std::make_unique<UIViewPortController>(
-    //     testCntlr3.get(), 0, HORIZONTAL, "vpNew4");
-    // testCntlr4->divide(0.3);
+    auto testCntlr4 = std::make_unique<UIViewPortController>(
+        testCntlr3.get(), 0, HORIZONTAL, "vpNew4");
+    testCntlr4->divide(0.3);
 
     application->exec();
     // mainCore->appLoop();
