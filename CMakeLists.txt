@@ -17,7 +17,7 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/Oxygen-Regular.ttf
 
 ##add the installed shared libraries directory to your PATH environment variable
 #something like 'vcpkg/installed/x64-windows/bin/'
-find_package(freetype CONFIG REQUIRED ) # should find freetype-config.cmake if available
+find_package(freetype  REQUIRED ) # should find freetype-config.cmake if available
 find_package(glfw3 CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
@@ -26,6 +26,7 @@ find_package(glm REQUIRED)
 include_directories( ${OPENGL_INCLUDE_DIRS} )
 include_directories( ${GLEW_INCLUDE_DIRS} )
 include_directories(${GLFW_INCLUDE_DIRS})
+include_directories(${FREETYPE_INCLUDE_DIRS})
 
 
 #include_directories(/usr/local/include/freetype2)
@@ -40,8 +41,8 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 14)
 
 target_link_libraries(${PROJECT_NAME} 
                       PRIVATE 
-                      freetype
+                      ${FREETYPE_LIBRARIES}
                       glfw
                       GLEW::GLEW
-                      glm
+                      ${GLM_LIBRARIES}
                       ${OPENGL_LIBRARIES})

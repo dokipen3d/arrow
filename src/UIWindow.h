@@ -124,7 +124,7 @@ public:
     int nodeIDUnderMousePos(keyStoreStruct key);
     int dragSkip = 0;
 
-    void resetViewport();
+    void resetViewport() override;
 
     GLFWwindow* getWindow();
     TextEngine* textEngine;

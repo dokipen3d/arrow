@@ -28,7 +28,8 @@ class UIView {
     // to be able to create a uiview and have it own its own window that is
     // embedded in. also needs to be before rootWindow otherwise it gets
     // reinitialized to nullptr after potentially embedding a window
-    std::unique_ptr<UIWindow> embeddedWindow = nullptr;
+    // ooh we have to remove = nullptr here because assigning in the header is not allowed on incomplete type!
+    std::unique_ptr<UIWindow> embeddedWindow;
 
     UIWindow* rootWindow;
 
@@ -52,7 +53,7 @@ class UIView {
 
   public:
     UIView(UIView* parent, int width, int height, std::string text = {});
-    UIView(const UIView& uiview) = default;
+    UIView(const UIView& uiview);
     virtual ~UIView();
     virtual void Draw(); // make it virtual so that it will call the derived
                          // function even if we refer to the object as a UIView
