@@ -93,7 +93,7 @@ atlas::atlas(FT_Face face, int height)
 
     for (int i = 32; i < 128; i++)
     {
-       // if (FT_Load_Char(face, i, FT_LOAD_MONOCHROME|FT_LOAD_TARGET_MONO))    //load with no AA
+       // if (FT_Load_Char(face, i, FT_LOAD_MONOCHROME|FT_LOAD_TARGET_MONO))    //load with no AA or FT_LOAD_DEFAULT
 
         if (FT_Load_Char(face, i,FT_LOAD_DEFAULT)) // load normal
         {

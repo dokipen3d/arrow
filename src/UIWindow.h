@@ -127,7 +127,7 @@ public:
     void resetViewport() override;
 
     GLFWwindow* getWindow();
-    TextEngine* textEngine;
+    std::unique_ptr<TextEngine> textEngine;
     bool programRunning;
     // assigned in application. used to make context current
     int rootID;

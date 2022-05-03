@@ -316,8 +316,7 @@ void UIView::Draw() {
         //           1.0);
 
         // glEnd();
-        // rootWindow->textEngine->render_text("view is the\n best", 0.0,
-        // 0.0, 1.0, 1.0);
+        //rootWindow->textEngine->render_text("view is the\n best", 0.0, 0.0, 1.0, 1.0);
     }
     if (childrenDrawable == true && viewCount() > 0) {
         depth += 0.05;

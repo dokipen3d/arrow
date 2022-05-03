@@ -11,7 +11,7 @@
 #include <GLFW/glfw3.h>
 
 
-#endif
+
 
 #include "ShaderObject.h"
 
@@ -130,3 +130,4 @@ private:
 
 };
 
+#endif

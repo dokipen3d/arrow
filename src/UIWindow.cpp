@@ -149,6 +149,9 @@ UIWindow::UIWindow(int width, int height, std::string windowTitle)
 
     eventHandler = nullptr;
     programRunning = true;
+
+    textEngine = std::make_unique<TextEngine>();
+    textEngine->initResources();
 }
 
 void UIWindow::ForceRefresh() {
@@ -214,8 +217,9 @@ void UIWindow::DrawGui() {
 
     // cout << "got here" << endl;
     // glTranslatef(0.0, 0.0, -1);
-
-    // textEngine->render_text("The quick brown fox jumps",  0,
+ /*   rootWindow->textEngine->render_text("view is the\n best", 0.0, 0.0, 1.0,
+                                        1.0);*/
+    //textEngine->render_text("The quick brown fox jumps",  0,
     // 200, 1.0f, 1.0f); textEngine->render_text("Yep sure is",  200.0f,
     // 500.0f, 1.0f, 1.0f);
 }
